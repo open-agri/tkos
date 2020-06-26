@@ -1,0 +1,8 @@
+menu "TractorKit Commander OS Settings"
+    menu "Platform"
+
+    endmenu
+    menu "GPIO (except display)"
+        
+    endmenu
+endmenu
