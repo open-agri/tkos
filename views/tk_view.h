@@ -10,7 +10,7 @@
 
 typedef struct {
     lv_obj_t *content;
-    tk_bottom_bar_configuration *bottom_bar_configuration;
+    tk_bottom_bar_configuration bottom_bar_configuration;
 } tk_view;
 
 #endif //TK_VIEW_H
