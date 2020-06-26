@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "lvgl/lvgl.h"
 
-typedef void (*tk_void_callback)(lv_obj_t *obj, lv_event_t event);
+typedef void (*tk_void_callback)(void);
 
 // TODO: Move to dynamic allocation
 
@@ -18,6 +18,7 @@ typedef struct
 {
     char text[30];
     tk_void_callback click_callback;
+    int items_count;
     tk_menu_item menu[10];
 } tk_bottom_bar_button;
 

@@ -3,7 +3,7 @@
 static void button_event_callback(lv_obj_t *obj, lv_event_t event) {
   switch (event) {
 	// case LV_EVENT_CLICKED:view_navigate(build_settings_info_view, true);
-	  break;
+	break;
   }
 }
 
@@ -24,7 +24,17 @@ tk_view build_main_view() {
 
   // Bottom bar
   tk_bottom_bar_button right = {
-	  .text = "Menu", .click_callback = button_event_callback};
+	  .text = "Menu",
+	  .click_callback = button_event_callback,
+	  .items_count = 4,
+	  .menu = {
+		  {.text = "First"},
+		  {.text = "Second"},
+		  {.text = "Third"},
+		  {.text = "Fourth"}
+
+	  }
+  };
 
   tk_bottom_bar_configuration bb_conf = {
 	  .right_button = right, .center_symbol = "TEST"};

@@ -2,12 +2,22 @@
 
 // LVGL includes
 #include "lvgl/lvgl.h"
-#include "lvgl_helpers.h"
 
-#include "views/views.h"
+#ifndef SIMULATOR
+#include "lvgl/lvgl_helpers.h"
+
 #include "hmi/ESP32/encoder.h"
 #include "hmi/ESP32/buttons.h"
+#endif
 
+#include "views/views.h"
+#include "views/styles/tk_style.h"
+
+void tkos_init(void) {
+  tk_styles_init();
+}
+
+#ifndef SIMULATOR
 static void lv_tick_task(void *arg)
 {
     (void)arg;
@@ -78,6 +88,7 @@ void guiTask(void *pvParameter)
     ESP_ERROR_CHECK(esp_timer_start_periodic(periodic_timer, LV_TICK_PERIOD_MS * 1000));
 
     // GUI Start
+    tkos_init();
     view_navigate(build_main_view, true);
 
     while (1)
@@ -94,3 +105,4 @@ void guiTask(void *pvParameter)
     //A task should NEVER return
     vTaskDelete(NULL);
 }
+#endif
