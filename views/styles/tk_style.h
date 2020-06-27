@@ -10,5 +10,7 @@ void tk_styles_init(void);
 
 // STYLES
 lv_style_t tk_style_menu_button;
+lv_style_t tk_style_menu;
+lv_style_t tk_style_bb;
 
 #endif

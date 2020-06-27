@@ -4,7 +4,7 @@
 #include "lvgl/lvgl.h"
 
 #ifndef SIMULATOR
-#include "lvgl/lvgl_helpers.h"
+#include "lvgl_helpers.h"
 
 #include "hmi/ESP32/encoder.h"
 #include "hmi/ESP32/buttons.h"
@@ -76,7 +76,7 @@ void guiTask(void *pvParameter)
     buttons_drv.read_cb = hmi_buttons_read;
     lv_indev_t *buttons_indev = lv_indev_drv_register(&buttons_drv);
 
-    static const lv_point_t points_array[] = {{5, 315}, {475, 315}};
+    static const lv_point_t points_array[] = {{20, 300}, {460, 300}};
     lv_indev_set_button_points(buttons_indev, points_array);
 
     const esp_timer_create_args_t periodic_timer_args = {
