@@ -1,6 +1,6 @@
 #include "bars.h"
 #include "lvgl/lvgl.h"
-#include "views.h"
+#include "../tkos.h"
 #include "styles/tk_style.h"
 
 tk_bottom_bar_configuration bb_conf;
@@ -17,13 +17,20 @@ lv_group_t *menu_group;
 void show_menu(tk_menu_item *menu_items, int items, bool left) {
 
   // Menu generation
-  menu = lv_page_create(lv_layer_top(), NULL);
+  menu = lv_list_create(lv_layer_top(), NULL);
   lv_obj_set_width(menu, 80);
   lv_obj_set_height(menu, items * 36);
   lv_obj_align(menu, lv_layer_top(), left ? LV_ALIGN_CENTER : LV_ALIGN_CENTER, 0, 0);
 
+
   // Group init
   menu_group = lv_group_create();
+
+#ifdef SIMULATOR
+  lv_indev_set_group(lv_indev_get_act(), menu_group);
+#elif
+  lv_indev_set_group(encoder_indev, menu_group);
+#endif
 
   for(int i = 0; i < items; i++) {
     lv_obj_t *item = lv_btn_create(menu, NULL);

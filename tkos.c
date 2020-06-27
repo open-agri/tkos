@@ -66,7 +66,7 @@ void guiTask(void *pvParameter)
     lv_indev_drv_init(&encoder_drv);
     encoder_drv.type = LV_INDEV_TYPE_ENCODER;
     encoder_drv.read_cb = hmi_encoder_read;
-    lv_indev_t *encoder_indev = lv_indev_drv_register(&encoder_drv);
+    encoder_indev = lv_indev_drv_register(&encoder_drv);
 
     // Buttons initialization
     hmi_buttons_init();

@@ -16,6 +16,9 @@
 // Definitions
 #define LV_TICK_PERIOD_MS 5
 
+// Global variables
+lv_indev_t *encoder_indev;
+
 // Prototypes
 static void lv_tick_task(void *arg);
 void guiTask(void *pvParameter);
