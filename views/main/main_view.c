@@ -1,11 +1,18 @@
 #include "../views.h"
 
+#include <stdio.h>
+
 static void button_event_callback(lv_obj_t *obj, lv_event_t event) {
   switch (event) {
 	// case LV_EVENT_CLICKED:view_navigate(build_settings_info_view, true);
 	break;
   }
 }
+
+void first_callback() {printf("First pressed.");}
+void second_callback() {printf("Second pressed.");}
+void third_callback() {printf("Third pressed.");}
+void fourth_callback() {printf("Fourth pressed.");}
 
 tk_view build_main_view() {
 
@@ -28,10 +35,10 @@ tk_view build_main_view() {
 	  .click_callback = button_event_callback,
 	  .items_count = 4,
 	  .menu = {
-		  {.text = "First"},
-		  {.text = "Second"},
-		  {.text = "Third"},
-		  {.text = "Fourth"}
+		  {.text = "First", .click_callback = &first_callback},
+		  {.text = "Second", .click_callback = &second_callback},
+		  {.text = "Third", .click_callback = &third_callback},
+		  {.text = "Fourth", .click_callback = &fourth_callback}
 
 	  }
   };

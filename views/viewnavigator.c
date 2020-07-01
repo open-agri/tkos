@@ -38,9 +38,9 @@ void view_navigate(tk_view_generator generator, bool record_stack)
     // Show new screen
     lv_scr_load(view_content);
 
-    // TODO: Draw bottom/top bar
-    lv_obj_t* bottom_bar = build_bottom_bar(bar_conf);
-    lv_obj_align(bottom_bar, view_content, LV_ALIGN_IN_BOTTOM_MID, 0, -8);
+    // Draw bottom/top bar
+    lv_obj_t* bottom_bar = build_bottom_bar(bar_conf, true);
+    lv_obj_align(bottom_bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, -8);
 
 
     // Destroy old screen    lv_obj_t* bottom_bar = build_bottom_bar(&(view->bottom_bar_configuration));

@@ -1,7 +1,7 @@
 #ifndef TKOS_H
 #define TKOS_H
 
-// #define SIMULATOR
+#define SIMULATOR
 
 // FreeRTOS includes
 #ifndef SIMULATOR

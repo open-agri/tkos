@@ -29,6 +29,6 @@ typedef struct
     tk_bottom_bar_button right_button;
 } tk_bottom_bar_configuration;
 
-lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration);
+lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool original);
 
 #endif
