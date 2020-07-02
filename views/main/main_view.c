@@ -44,7 +44,7 @@ tk_view build_main_view() {
   };
 
   tk_bottom_bar_configuration bb_conf = {
-	  .right_button = right, .center_symbol = "TEST"};
+	  .right_button = right};
 
   // Return struct
   tk_view main_view = {

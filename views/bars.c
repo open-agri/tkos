@@ -44,6 +44,7 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left) {
     lv_obj_set_height(menu, items <= 7 ? items * 36 + 24 : 276);
     lv_obj_align(menu, bottom_bar, left ? LV_ALIGN_OUT_TOP_LEFT : LV_ALIGN_OUT_TOP_RIGHT, 0, -8);
     lv_obj_add_style(menu, LV_LIST_PART_BG, &tk_style_menu);
+    lv_obj_add_style(menu, LV_LIST_PART_SCROLLABLE, &tk_style_menu);
 
     // Group init (list does not work with this configuration)
     menu_group = lv_group_create();
@@ -170,9 +171,23 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
         lv_obj_set_event_cb(left_button, left_button_event_callback);
         lv_obj_add_style(left_button, LV_BTN_PART_MAIN, &tk_style_menu_button);
 
+        /* ICON PREPARATION */
+        char label_text[40] = {};
+        if (configuration.left_button.items_count > 0 && !menu_open)
+            strcpy(label_text, LV_SYMBOL_UP "   ");
+
+        strcat(label_text, configuration.left_button.text);
+
+
+        /* LABEL */
         lv_obj_t *label = lv_label_create(left_button, NULL);
-        lv_label_set_text(label, configuration.left_button.text);
+        lv_label_set_text(label, label_text);
     }
+
+    /* CENTER LABEL */
+    lv_obj_t * center_label = lv_label_create(bottom_bar, NULL);
+    lv_label_set_text(center_label, configuration.center_symbol);
+    lv_obj_align(center_label, bottom_bar, LV_ALIGN_CENTER, 0, 0);
 
     /* RIGHT BUTTON */
     if (strlen(configuration.right_button.text)) {
@@ -183,8 +198,15 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
 
         lv_obj_align(right_button, bottom_bar, LV_ALIGN_IN_RIGHT_MID, 0, 0);
 
+        /* ICON PREPARATION */
+        char label_text[40];
+        strcpy(label_text, configuration.right_button.text);
+        if (configuration.right_button.items_count > 0 && !menu_open)
+            strcat(label_text, "   " LV_SYMBOL_UP);
+
+        /* LABEL */
         lv_obj_t *label = lv_label_create(right_button, NULL);
-        lv_label_set_text(label, configuration.right_button.text);
+        lv_label_set_text(label, label_text);
     }
 
 

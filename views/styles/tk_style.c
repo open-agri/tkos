@@ -7,9 +7,9 @@
 
 void set_default_shadow(lv_style_t * style) {
   lv_style_set_shadow_color(style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
-  lv_style_set_shadow_opa(style, LV_STATE_DEFAULT, LV_OPA_40);
+  lv_style_set_shadow_opa(style, LV_STATE_DEFAULT, LV_OPA_30);
   lv_style_set_shadow_ofs_y(style, LV_STATE_DEFAULT, 16);
-  lv_style_set_shadow_width(style, LV_STATE_DEFAULT, 30);
+  lv_style_set_shadow_width(style, LV_STATE_DEFAULT, 20);
 }
 
 void tk_styles_init(void) {
@@ -34,7 +34,7 @@ void tk_styles_init(void) {
   // MENU
   lv_style_init(&tk_style_menu);
   set_default_shadow(&tk_style_menu);
-  lv_style_set_radius(&tk_style_menu, LV_STATE_DEFAULT, 4);
+  lv_style_set_radius(&tk_style_menu, LV_STATE_DEFAULT, 8);
   lv_style_set_clip_corner(&tk_style_menu, LV_STATE_DEFAULT, true);
   lv_style_set_border_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
   lv_style_set_outline_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
@@ -46,7 +46,7 @@ void tk_styles_init(void) {
   // BOTTOM BAR
   lv_style_init(&tk_style_bb);
   set_default_shadow(&tk_style_bb);
-  lv_style_set_radius(&tk_style_bb, LV_STATE_DEFAULT, 4);
+  lv_style_set_radius(&tk_style_bb, LV_STATE_DEFAULT, 8);
   lv_style_set_border_width(&tk_style_bb, LV_STATE_DEFAULT, 0);
   lv_style_set_clip_corner(&tk_style_bb, LV_STATE_DEFAULT, true);
 }
