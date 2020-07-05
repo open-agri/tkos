@@ -29,6 +29,64 @@ typedef struct
     tk_bottom_bar_button right_button;
 } tk_bottom_bar_configuration;
 
+typedef enum {
+    TK_GPS_STATUS_NO_ANTENNA,
+    TK_GPS_STATUS_DISABLED,
+    TK_GPS_STATUS_CONNECTING,
+    TK_GPS_STATUS_CONNECTED
+} tk_gps_status;
+
+typedef enum {
+    TK_VEHNET_DISABLED,
+    TK_VEHNET_CONNECTING,
+    TK_VEHNET_COMPLETE
+} tk_vehnet_status;
+
+typedef enum {
+    TK_WARNING_ICON_NONE,
+    TK_WARNING_ICON_INFO,
+    TK_WARNING_ICON_ATTENTION,
+    TK_WARNING_ICON_ATTENTION_FLASHING,
+    TK_WARNING_ICON_CRITICAL,
+    TK_WARNING_ICON_CRITICAL_FLASHING
+} tk_warning_icon_level;
+
+typedef enum {
+    TK_TOOL_ICON_NONE,
+    TK_TOOL_ICON_TECHNICIAN,
+    TK_TOOL_ICON_DEVELOPER
+} tk_tool_icon;
+
+typedef struct
+{
+    /* TIME */
+    unsigned int hours;
+    unsigned int minutes;
+    bool twenty_four_hours;
+
+    /* SPEED */
+    double speed_kph;
+    bool metric;
+
+    /* BLUETOOTH CONNECTED */
+    bool bluetooth_connected;
+
+    /* GPS */
+    tk_gps_status gps_status;
+
+    /* LOCAL NETWORK */
+    tk_vehnet_status local_network_status;
+    unsigned int local_network_device_count;
+
+    /* WARNING */
+    tk_warning_icon_level warning_level;
+
+    /* TOOL CONNECTED */
+
+
+} tk_top_bar_configuration;
+
 lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool original);
+lv_obj_t *build_top_bar(tk_top_bar_configuration configuration);
 
 #endif

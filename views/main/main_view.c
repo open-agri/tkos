@@ -17,7 +17,8 @@ void fourth_callback() {printf("Fourth pressed.");}
 tk_view build_main_view() {
 
   // Content
-  lv_obj_t *main_view_content = lv_obj_create(NULL, NULL);
+  lv_obj_t *main_view_content = lv_cont_create(NULL, NULL);
+  lv_obj_add_style(main_view_content, LV_CONT_PART_MAIN, &tk_style_far_background);
 
   lv_obj_t *label = lv_label_create(main_view_content, NULL);
   lv_label_set_text(label, "Main screen");
