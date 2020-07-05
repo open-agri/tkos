@@ -3,6 +3,8 @@
 #include "../tkos.h"
 #include "styles/tk_style.h"
 
+#include <stdio.h>
+
 
 tk_bottom_bar_configuration original_bottom_bar_configuration;
 
@@ -220,10 +222,11 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
             .gps_status = TK_GPS_STATUS_CONNECTED,
             .local_network_status = TK_VEHNET_COMPLETE,
             .local_network_device_count = 3,
-            .metric = true,
+            .celsius = false,
             .minutes = 12,
             .hours = 14,
-            .speed_kph = 35,
+            .twenty_four_hours = false,
+            .temp_c = 35.435235,
             .warning_level = TK_WARNING_ICON_CRITICAL
     };
 
@@ -236,9 +239,47 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
 // TODO: Compass builder
 
 lv_obj_t *build_top_bar(tk_top_bar_configuration configuration) {
+
+    /* BACKGROUND */
     lv_obj_t *top_bar = lv_cont_create(lv_layer_top(), NULL);
     lv_obj_set_height(top_bar, 36);
     lv_obj_set_width(top_bar, 480);
     lv_obj_add_style(top_bar, LV_CONT_PART_MAIN, &tk_style_bar);
+
+    /* CLOCK */
+    char time[10] = {};
+    char ampm[4] = {};
+    int hours = configuration.hours;
+    if (!configuration.twenty_four_hours) {
+        strncpy(ampm, configuration.hours > 12 ? " PM" : " AM", 3);
+        hours = hours % 12;
+    }
+
+    sprintf(time, "%d:%d%s", hours, configuration.minutes, ampm);
+    lv_obj_t *clock_label = lv_label_create(top_bar, NULL);
+    lv_label_set_text(clock_label, time);
+    lv_obj_align(clock_label, top_bar, LV_ALIGN_CENTER, 0, 0);
+
+    /* TEMPERATURE */
+    double temperature = configuration.temp_c;
+    char unit[5] = {};
+    if (!configuration.celsius) {
+        temperature = (temperature * (9.0 / 5.0)) + 32.0;
+        strncpy(unit, "°F", 3);
+    } else {
+        strncpy(unit, "°C", 3);
+    }
+
+    char temperature_text[10] = {};
+    sprintf(temperature_text, "%.1f%s", temperature, unit);
+
+    lv_obj_t *temperature_label = lv_label_create(top_bar, NULL);
+    lv_label_set_text(temperature_label, temperature_text);
+    lv_obj_align(temperature_label, top_bar, LV_ALIGN_IN_RIGHT_MID, -8, 0);
+
+    /* LOCAL NETWORK */
+
+
+
     return top_bar;
 }

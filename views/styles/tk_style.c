@@ -8,28 +8,27 @@
 void set_default_shadow(lv_style_t *style, int height) {
     int radius = height * height / 2;
     lv_style_set_shadow_color(style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
-    lv_style_set_shadow_opa(style, LV_STATE_DEFAULT, LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK ? LV_OPA_30 : LV_OPA_40);
+    lv_style_set_shadow_opa(style, LV_STATE_DEFAULT,
+                            LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK ? LV_OPA_30 : LV_OPA_40);
     lv_style_set_shadow_ofs_y(style, LV_STATE_DEFAULT, 0);
     lv_style_set_shadow_width(style, LV_STATE_DEFAULT, radius);
 }
 
 lv_color_t get_themed_bar_background_color() {
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) {
-        return LV_COLOR_BLACK;
+        return (lv_color_t) {24, 24, 24, 255};
     } else {
-        return (lv_color_t){225, 225, 225, 255};
+        return (lv_color_t) {237, 237, 237, 255};
     }
 }
 
 lv_color_t get_themed_far_background_color() {
     lv_color_t color = get_themed_bar_background_color();
-    int mix;
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) {
-        mix = 220;
+        return (lv_color_t) {8, 8, 8, 255};
     } else {
-        mix = 0;
+        return LV_COLOR_WHITE;
     }
-    return lv_color_mix(color, LV_COLOR_WHITE, mix);
 }
 
 lv_color_t get_themed_near_background_color() {
@@ -38,7 +37,7 @@ lv_color_t get_themed_near_background_color() {
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) {
         mix = 190;
     } else {
-        mix = 30;
+        mix = 100;
     }
     return lv_color_mix(color, LV_COLOR_WHITE, mix);
 }
@@ -66,7 +65,7 @@ void tk_styles_init(void) {
 
     // MENU
     lv_style_init(&tk_style_menu);
-    set_default_shadow(&tk_style_menu, 7);
+    set_default_shadow(&tk_style_menu, 9);
     lv_style_set_radius(&tk_style_menu, LV_STATE_DEFAULT, 8);
     lv_style_set_clip_corner(&tk_style_menu, LV_STATE_DEFAULT, true);
     lv_style_set_border_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
@@ -83,7 +82,7 @@ void tk_styles_init(void) {
 
     // BARS
     lv_style_init(&tk_style_bar);
-    set_default_shadow(&tk_style_bar, 9);
+    set_default_shadow(&tk_style_bar, 7);
     lv_style_set_radius(&tk_style_bar, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_bar, LV_STATE_DEFAULT, 0);
     lv_style_set_clip_corner(&tk_style_bar, LV_STATE_DEFAULT, true);

@@ -59,30 +59,30 @@ typedef enum {
 
 typedef struct
 {
-    /* TIME */
-    unsigned int hours;
-    unsigned int minutes;
-    bool twenty_four_hours;
-
-    /* SPEED */
-    double speed_kph;
-    bool metric;
-
-    /* BLUETOOTH CONNECTED */
-    bool bluetooth_connected;
-
-    /* GPS */
-    tk_gps_status gps_status;
-
     /* LOCAL NETWORK */
     tk_vehnet_status local_network_status;
     unsigned int local_network_device_count;
 
+    /* GPS */
+    tk_gps_status gps_status;
+
     /* WARNING */
     tk_warning_icon_level warning_level;
 
-    /* TOOL CONNECTED */
+    /* BLUETOOTH CONNECTED */
+    bool bluetooth_connected;
 
+    /* CLOCK */
+    unsigned int hours;
+    unsigned int minutes;
+    bool twenty_four_hours;
+
+    /* TOOL CONNECTED */
+    tk_tool_icon connected_tool_icon;
+
+    /* TEMPERATURE */
+    double temp_c;
+    bool celsius;
 
 } tk_top_bar_configuration;
 
