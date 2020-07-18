@@ -2,9 +2,10 @@
 #include "lvgl/lvgl.h"
 #include "../tkos.h"
 #include "styles/tk_style.h"
+#include "fonts/icons.h"
 
 #include <stdio.h>
-
+#include <time.h> // For flashing icons and actual time
 
 tk_bottom_bar_configuration original_bottom_bar_configuration;
 
@@ -15,7 +16,8 @@ lv_obj_t *menu;
 lv_obj_t *bottom_bar;
 lv_group_t *menu_group;
 
-void hide_menu(lv_obj_t *menu) {
+void hide_menu(lv_obj_t *menu)
+{
 
     // Hide the menu
     lv_obj_del(menu);
@@ -29,10 +31,10 @@ void hide_menu(lv_obj_t *menu) {
 
     // Note: build_bottom_bar automatically sets bottom_bar pointer
     lv_obj_align(bottom_bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, 0);
-
 }
 
-void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left) {
+void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
+{
 
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
     tk_menu_item *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
@@ -57,7 +59,8 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left) {
 #endif
 
     lv_obj_t *btn;
-    for (int i = 0; i < items; i++) {
+    for (int i = 0; i < items; i++)
+    {
         btn = lv_list_add_btn(menu, NULL, menu_items[i].text);
         lv_obj_add_style(btn, LV_BTN_PART_MAIN, &tk_style_menu_button);
         lv_obj_set_height(btn, 36);
@@ -83,79 +86,94 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left) {
     lv_obj_move_foreground(bottom_bar);
 }
 
-static void left_button_event_callback(lv_obj_t *obj, lv_event_t event) {
+static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
+{
 
-    switch (event) {
-        case LV_EVENT_CLICKED:
-            // Clicked: execute callback when menus closed, close menu when open
-            if (menu_open) {
-                // Close menu
-                hide_menu(menu);
-            } else {
-                if (original_bottom_bar_configuration.left_button.click_callback != NULL)
-                    (original_bottom_bar_configuration.left_button.click_callback)();
-            }
+    switch (event)
+    {
+    case LV_EVENT_CLICKED:
+        // Clicked: execute callback when menus closed, close menu when open
+        if (menu_open)
+        {
+            // Close menu
+            hide_menu(menu);
+        }
+        else
+        {
+            if (original_bottom_bar_configuration.left_button.click_callback != NULL)
+                (original_bottom_bar_configuration.left_button.click_callback)();
+        }
 
-            break;
+        break;
 
-        case LV_EVENT_LONG_PRESSED:
-            // Long press: show menu when both are closed and a menu is available
-            if (!menu_open && original_bottom_bar_configuration.left_button.items_count > 0) {
-                // Using a flag in order to delay the appearance of the menu on button release
-                menu_flag = true;
-            }
-            break;
+    case LV_EVENT_LONG_PRESSED:
+        // Long press: show menu when both are closed and a menu is available
+        if (!menu_open && original_bottom_bar_configuration.left_button.items_count > 0)
+        {
+            // Using a flag in order to delay the appearance of the menu on button release
+            menu_flag = true;
+        }
+        break;
 
-        case LV_EVENT_RELEASED:
-            // No continued pressure
-            lv_obj_set_state(obj, LV_STATE_DEFAULT);
+    case LV_EVENT_RELEASED:
+        // No continued pressure
+        lv_obj_set_state(obj, LV_STATE_DEFAULT);
 
-            if (menu_flag) {
-                show_menu(original_bottom_bar_configuration, true);
-                menu_flag = false;
-            }
-            break;
+        if (menu_flag)
+        {
+            show_menu(original_bottom_bar_configuration, true);
+            menu_flag = false;
+        }
+        break;
     }
 }
 
-static void right_button_event_callback(lv_obj_t *obj, lv_event_t event) {
+static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
+{
 
-    switch (event) {
-        case LV_EVENT_CLICKED:
-            // Clicked: execute callback when menus closed, select item when open
-            if (menu_open) {
-                // Select item (execute function pointed by user data of the focused button)
-                ((tk_void_callback) (lv_group_get_focused(menu_group)->user_data))();
-                // Close menu
-                hide_menu(menu);
-            } else {
-                if (original_bottom_bar_configuration.right_button.click_callback != NULL)
-                    (original_bottom_bar_configuration.right_button.click_callback)();
-            }
+    switch (event)
+    {
+    case LV_EVENT_CLICKED:
+        // Clicked: execute callback when menus closed, select item when open
+        if (menu_open)
+        {
+            // Select item (execute function pointed by user data of the focused button)
+            ((tk_void_callback)(lv_group_get_focused(menu_group)->user_data))();
+            // Close menu
+            hide_menu(menu);
+        }
+        else
+        {
+            if (original_bottom_bar_configuration.right_button.click_callback != NULL)
+                (original_bottom_bar_configuration.right_button.click_callback)();
+        }
 
-            break;
+        break;
 
-        case LV_EVENT_LONG_PRESSED:
-            // Long press: show menu when both are closed and a menu is available
-            if (!menu_open && original_bottom_bar_configuration.right_button.items_count > 0) {
-                // Using a flag in order to delay the appearance of the menu on button release
-                menu_flag = true;
-            }
-            break;
+    case LV_EVENT_LONG_PRESSED:
+        // Long press: show menu when both are closed and a menu is available
+        if (!menu_open && original_bottom_bar_configuration.right_button.items_count > 0)
+        {
+            // Using a flag in order to delay the appearance of the menu on button release
+            menu_flag = true;
+        }
+        break;
 
-        case LV_EVENT_RELEASED:
-            // No continued pressure
-            lv_obj_set_state(obj, LV_STATE_DEFAULT);
+    case LV_EVENT_RELEASED:
+        // No continued pressure
+        lv_obj_set_state(obj, LV_STATE_DEFAULT);
 
-            if (menu_flag) {
-                show_menu(original_bottom_bar_configuration, false);
-                menu_flag = false;
-            }
-            break;
+        if (menu_flag)
+        {
+            show_menu(original_bottom_bar_configuration, false);
+            menu_flag = false;
+        }
+        break;
     }
 }
 
-lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool original) {
+lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool original)
+{
 
     /* BACKGROUND */
 
@@ -166,7 +184,8 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
     lv_obj_add_style(bottom_bar, LV_CONT_PART_MAIN, &tk_style_bar);
 
     /* LEFT BUTTON */
-    if (strlen(configuration.left_button.text)) {
+    if (strlen(configuration.left_button.text))
+    {
         lv_obj_t *left_button = lv_btn_create(bottom_bar, NULL);
         lv_obj_set_size(left_button, 120, 36);
         lv_obj_set_event_cb(left_button, left_button_event_callback);
@@ -179,7 +198,6 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
 
         strcat(label_text, configuration.left_button.text);
 
-
         /* LABEL */
         lv_obj_t *label = lv_label_create(left_button, NULL);
         lv_label_set_text(label, label_text);
@@ -191,7 +209,8 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
     lv_obj_align(center_label, bottom_bar, LV_ALIGN_CENTER, 0, 0);
 
     /* RIGHT BUTTON */
-    if (strlen(configuration.right_button.text)) {
+    if (strlen(configuration.right_button.text))
+    {
         lv_obj_t *right_button = lv_btn_create(bottom_bar, NULL);
         lv_obj_set_size(right_button, 120, 36);
         lv_obj_set_event_cb(right_button, right_button_event_callback);
@@ -210,25 +229,22 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
         lv_label_set_text(label, label_text);
     }
 
-
     /* SAVE CONF AND POINTER */
     if (original)
         original_bottom_bar_configuration = configuration;
 
     // TODO: Remove this call, it's just a test for the top bar
-    // Also, old bar doesn't get destroyed.
+    // TODO: Also, old bar doesn't get destroyed.
     tk_top_bar_configuration conf = {
-            .bluetooth_connected= true,
-            .gps_status = TK_GPS_STATUS_CONNECTED,
-            .local_network_status = TK_VEHNET_COMPLETE,
-            .local_network_device_count = 3,
-            .celsius = false,
-            .minutes = 12,
-            .hours = 14,
-            .twenty_four_hours = false,
-            .temp_c = 35.435235,
-            .warning_level = TK_WARNING_ICON_CRITICAL
-    };
+        .bluetooth_connected = true,
+        .gps_status = TK_GPS_STATUS_CONNECTING,
+        .local_network_status = TK_VEHNET_CONNECTING,
+        .local_network_connected_device_count = 3,
+        .celsius = false,
+        .twenty_four_hours = false,
+        .temp_c = 35.435235,
+        .warning_level = TK_WARNING_ICON_CRITICAL_FLASHING,
+        .connected_tool_icon = TK_TOOL_ICON_TECHNICIAN};
 
     lv_obj_t *top_bar = build_top_bar(conf);
     lv_obj_align(top_bar, lv_layer_top(), LV_ALIGN_IN_TOP_MID, 0, 0);
@@ -238,7 +254,8 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
 
 // TODO: Compass builder
 
-lv_obj_t *build_top_bar(tk_top_bar_configuration configuration) {
+lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
+{
 
     /* BACKGROUND */
     lv_obj_t *top_bar = lv_cont_create(lv_layer_top(), NULL);
@@ -247,15 +264,23 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration) {
     lv_obj_add_style(top_bar, LV_CONT_PART_MAIN, &tk_style_bar);
 
     /* CLOCK */
+    time_t time_raw;
+    time(&time_raw);
+    struct tm *timeinfo;
+    timeinfo = localtime(&time_raw);
+
     char time[10] = {};
     char ampm[4] = {};
-    int hours = configuration.hours;
-    if (!configuration.twenty_four_hours) {
-        strncpy(ampm, configuration.hours > 12 ? " PM" : " AM", 3);
+    int hours = timeinfo->tm_hour;
+    if (!configuration.twenty_four_hours)
+    {
+        strncpy(ampm, hours > 12 ? " PM" : " AM", 3);
         hours = hours % 12;
     }
 
-    sprintf(time, "%d:%d%s", hours, configuration.minutes, ampm);
+    char sep = ((timeinfo->tm_sec) % 2) ? ':' : ' ';
+
+    sprintf(time, "%02d%c%02d%s", hours, sep, timeinfo->tm_min, ampm);
     lv_obj_t *clock_label = lv_label_create(top_bar, NULL);
     lv_label_set_text(clock_label, time);
     lv_obj_align(clock_label, top_bar, LV_ALIGN_CENTER, 0, 0);
@@ -263,10 +288,13 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration) {
     /* TEMPERATURE */
     double temperature = configuration.temp_c;
     char unit[5] = {};
-    if (!configuration.celsius) {
+    if (!configuration.celsius)
+    {
         temperature = (temperature * (9.0 / 5.0)) + 32.0;
         strncpy(unit, "°F", 3);
-    } else {
+    }
+    else
+    {
         strncpy(unit, "°C", 3);
     }
 
@@ -277,9 +305,132 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration) {
     lv_label_set_text(temperature_label, temperature_text);
     lv_obj_align(temperature_label, top_bar, LV_ALIGN_IN_RIGHT_MID, -8, 0);
 
+    /* BLUETOOTH */
+    lv_obj_t *bluetooth_icon = lv_label_create(top_bar, NULL);
+    lv_obj_add_style(bluetooth_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
+    lv_label_set_text(bluetooth_icon, (configuration.bluetooth_connected) ? TK_ICON_BLUETOOTH : "");
+    lv_obj_align(bluetooth_icon, top_bar, LV_ALIGN_IN_LEFT_MID, 8, 0);
+
     /* LOCAL NETWORK */
+    lv_obj_t *vehnet_icon = lv_label_create(top_bar, NULL);
+    lv_obj_add_style(vehnet_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
 
+    switch (configuration.local_network_status)
+    {
+    case TK_VEHNET_COMPLETE:
+        // Complete
+        lv_label_set_text(vehnet_icon, TK_ICON_LAN);
+        break;
 
+    case TK_VEHNET_CONNECTING:
+        // Connecting
+        lv_label_set_text(vehnet_icon, TK_ICON_LAN);
+
+        // Flash
+        struct timespec spec;
+        clock_gettime(CLOCK_REALTIME, &spec);
+        long ms = spec.tv_nsec / 1000000;
+        lv_obj_set_style_local_text_opa(vehnet_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, ((ms % 1000) < 500) ? LV_OPA_0 : LV_OPA_100);
+        break;
+    case TK_VEHNET_DISABLED:
+    default:
+        // Disabled
+        lv_label_set_text(vehnet_icon, "");
+        break;
+    }
+
+    lv_obj_align(vehnet_icon, bluetooth_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
+
+    /* LOCATION */
+    lv_obj_t *location_icon = lv_label_create(top_bar, NULL);
+    lv_obj_add_style(location_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
+
+    switch (configuration.gps_status)
+    {
+    case TK_GPS_STATUS_CONNECTED:
+        // Connected
+        lv_label_set_text(location_icon, TK_ICON_LOCATION);
+        break;
+
+    case TK_GPS_STATUS_CONNECTING:
+        // Connecting
+        lv_label_set_text(location_icon, TK_ICON_LOCATION);
+
+        // Flash
+        struct timespec spec;
+        clock_gettime(CLOCK_REALTIME, &spec);
+        long ms = spec.tv_nsec / 1000000;
+        lv_obj_set_style_local_text_opa(location_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, (((ms + 333) % 1000) < 500) ? LV_OPA_0 : LV_OPA_100);
+        break;
+
+    case TK_GPS_STATUS_OFF:
+    default:
+        // Disabled
+        lv_label_set_text(location_icon, "");
+        break;
+    }
+
+    lv_obj_align(location_icon, vehnet_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
+
+    /* WARNING */
+    lv_obj_t *warning_icon = lv_label_create(top_bar, NULL);
+
+    switch (configuration.warning_level)
+    {
+    case TK_WARNING_ICON_INFO:
+        // Info
+        lv_label_set_text(warning_icon, TK_ICON_INFO);
+        lv_obj_add_style(warning_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
+        break;
+
+    case TK_WARNING_ICON_ATTENTION:
+    case TK_WARNING_ICON_CRITICAL:
+        // Error
+        lv_label_set_text(warning_icon, TK_ICON_WARNING);
+        // Change color dynamically
+        lv_obj_add_style(warning_icon, LV_LABEL_PART_MAIN, (configuration.warning_level == TK_WARNING_ICON_ATTENTION) ? &tk_style_top_bar_icon_warn : &tk_style_top_bar_icon_error);
+        break;
+
+    case TK_WARNING_ICON_ATTENTION_FLASHING:
+    case TK_WARNING_ICON_CRITICAL_FLASHING:
+        /// Error flashing
+        lv_label_set_text(warning_icon, TK_ICON_WARNING);
+        // Change color dynamically
+        lv_obj_add_style(warning_icon, LV_LABEL_PART_MAIN, (configuration.warning_level == TK_WARNING_ICON_ATTENTION_FLASHING) ? &tk_style_top_bar_icon_warn : &tk_style_top_bar_icon_error);
+
+        // Flash
+        struct timespec spec;
+        clock_gettime(CLOCK_REALTIME, &spec);
+        long ms = spec.tv_nsec / 1000000;
+        lv_obj_set_style_local_text_opa(warning_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, (((ms + 667) % 1000) < 500) ? LV_OPA_0 : LV_OPA_100);
+        break;
+
+    case TK_WARNING_ICON_NONE:
+    default:
+        // Disabled
+        lv_label_set_text(warning_icon, "");
+        break;
+    }
+
+    lv_obj_align(warning_icon, location_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
+
+    /* DIAGNOSIS */
+    lv_obj_t *diag_icon = lv_label_create(top_bar, NULL);
+    lv_obj_add_style(diag_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
+    switch (configuration.connected_tool_icon)
+    {
+    case TK_TOOL_ICON_TECHNICIAN:
+        lv_label_set_text(diag_icon, TK_ICON_STETHOSCOPE);
+        break;
+    case TK_TOOL_ICON_DEVELOPER:
+        lv_label_set_text(diag_icon, TK_ICON_TERMINAL);
+        break;
+    case TK_TOOL_ICON_NONE:
+    default:
+        break;
+    }
+
+    lv_obj_align(diag_icon, warning_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
     return top_bar;
 }

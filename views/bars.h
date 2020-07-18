@@ -30,8 +30,7 @@ typedef struct
 } tk_bottom_bar_configuration;
 
 typedef enum {
-    TK_GPS_STATUS_NO_ANTENNA,
-    TK_GPS_STATUS_DISABLED,
+    TK_GPS_STATUS_OFF,
     TK_GPS_STATUS_CONNECTING,
     TK_GPS_STATUS_CONNECTED
 } tk_gps_status;
@@ -61,7 +60,7 @@ typedef struct
 {
     /* LOCAL NETWORK */
     tk_vehnet_status local_network_status;
-    unsigned int local_network_device_count;
+    unsigned int local_network_connected_device_count;
 
     /* GPS */
     tk_gps_status gps_status;
@@ -73,8 +72,6 @@ typedef struct
     bool bluetooth_connected;
 
     /* CLOCK */
-    unsigned int hours;
-    unsigned int minutes;
     bool twenty_four_hours;
 
     /* TOOL CONNECTED */
