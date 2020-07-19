@@ -7,3 +7,5 @@
 0xf120 Terminal (full access, thanks Emily),
 0xf05a Info,
 0xf071 Warning triangle,
+
+Normal font: 0x20-0x24F

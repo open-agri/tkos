@@ -40,12 +40,11 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
     tk_menu_item *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
 
     // Menu generation
+    // TODO: Automatic resize
     menu = lv_list_create(lv_scr_act(), NULL);
     lv_list_set_scrollbar_mode(menu, LV_SCROLLBAR_MODE_AUTO);
     lv_list_set_anim_time(menu, 200);
     lv_obj_set_width(menu, 140);
-    lv_obj_set_height(menu, items <= 7 ? items * 36 + 24 : 276);
-    lv_obj_align(menu, bottom_bar, left ? LV_ALIGN_OUT_TOP_LEFT : LV_ALIGN_OUT_TOP_RIGHT, left ? 8 : -8, -8);
     lv_obj_add_style(menu, LV_LIST_PART_BG, &tk_style_menu);
     lv_obj_add_style(menu, LV_LIST_PART_SCROLLABLE, &tk_style_menu);
 
@@ -59,11 +58,13 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
 #endif
 
     lv_obj_t *btn;
+    unsigned int tot_height = 0;
     for (int i = 0; i < items; i++)
     {
         btn = lv_list_add_btn(menu, NULL, menu_items[i].text);
         lv_obj_add_style(btn, LV_BTN_PART_MAIN, &tk_style_menu_button);
-        lv_obj_set_height(btn, 36);
+        lv_obj_set_style_local_pad_ver(btn, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 6);
+        tot_height += lv_obj_get_height(btn);
 
         // Set callback to be retrieved later in user_data
         // TODO: Create a callback which executes this pointer on tap, for eventual future touchscreen systems
@@ -72,6 +73,10 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
         // Add to group
         lv_group_add_obj(menu_group, btn);
     }
+
+    // Update height
+    lv_obj_set_height(menu, (tot_height <= 276) ? tot_height : 276);
+    lv_obj_align(menu, bottom_bar, left ? LV_ALIGN_OUT_TOP_LEFT : LV_ALIGN_OUT_TOP_RIGHT, left ? 8 : -8, -8);
 
     // Update variables
     menu_open = true;
@@ -233,35 +238,17 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
     if (original)
         original_bottom_bar_configuration = configuration;
 
-    // TODO: Remove this call, it's just a test for the top bar
-    // TODO: Also, old bar doesn't get destroyed.
-    tk_top_bar_configuration conf = {
-        .bluetooth_connected = true,
-        .gps_status = TK_GPS_STATUS_CONNECTING,
-        .local_network_status = TK_VEHNET_CONNECTING,
-        .local_network_connected_device_count = 3,
-        .celsius = false,
-        .twenty_four_hours = false,
-        .temp_c = 35.435235,
-        .warning_level = TK_WARNING_ICON_CRITICAL_FLASHING,
-        .connected_tool_icon = TK_TOOL_ICON_TECHNICIAN};
-
-    lv_obj_t *top_bar = build_top_bar(conf);
-    lv_obj_align(top_bar, lv_layer_top(), LV_ALIGN_IN_TOP_MID, 0, 0);
-
     return bottom_bar;
 }
-
-// TODO: Compass builder
 
 lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
 {
 
     /* BACKGROUND */
-    lv_obj_t *top_bar = lv_cont_create(lv_layer_top(), NULL);
-    lv_obj_set_height(top_bar, 36);
-    lv_obj_set_width(top_bar, 480);
-    lv_obj_add_style(top_bar, LV_CONT_PART_MAIN, &tk_style_bar);
+    lv_obj_t *tk_top_bar = lv_cont_create(lv_layer_top(), NULL);
+    lv_obj_set_height(tk_top_bar, 36);
+    lv_obj_set_width(tk_top_bar, 480);
+    lv_obj_add_style(tk_top_bar, LV_CONT_PART_MAIN, &tk_style_bar);
 
     /* CLOCK */
     time_t time_raw;
@@ -281,9 +268,9 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     char sep = ((timeinfo->tm_sec) % 2) ? ':' : ' ';
 
     sprintf(time, "%02d%c%02d%s", hours, sep, timeinfo->tm_min, ampm);
-    lv_obj_t *clock_label = lv_label_create(top_bar, NULL);
+    lv_obj_t *clock_label = lv_label_create(tk_top_bar, NULL);
     lv_label_set_text(clock_label, time);
-    lv_obj_align(clock_label, top_bar, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(clock_label, tk_top_bar, LV_ALIGN_CENTER, 0, 0);
 
     /* TEMPERATURE */
     double temperature = configuration.temp_c;
@@ -301,18 +288,18 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     char temperature_text[10] = {};
     sprintf(temperature_text, "%.1f%s", temperature, unit);
 
-    lv_obj_t *temperature_label = lv_label_create(top_bar, NULL);
+    lv_obj_t *temperature_label = lv_label_create(tk_top_bar, NULL);
     lv_label_set_text(temperature_label, temperature_text);
-    lv_obj_align(temperature_label, top_bar, LV_ALIGN_IN_RIGHT_MID, -8, 0);
+    lv_obj_align(temperature_label, tk_top_bar, LV_ALIGN_IN_RIGHT_MID, -8, 0);
 
     /* BLUETOOTH */
-    lv_obj_t *bluetooth_icon = lv_label_create(top_bar, NULL);
+    lv_obj_t *bluetooth_icon = lv_label_create(tk_top_bar, NULL);
     lv_obj_add_style(bluetooth_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
     lv_label_set_text(bluetooth_icon, (configuration.bluetooth_connected) ? TK_ICON_BLUETOOTH : "");
-    lv_obj_align(bluetooth_icon, top_bar, LV_ALIGN_IN_LEFT_MID, 8, 0);
+    lv_obj_align(bluetooth_icon, tk_top_bar, LV_ALIGN_IN_LEFT_MID, 8, 0);
 
     /* LOCAL NETWORK */
-    lv_obj_t *vehnet_icon = lv_label_create(top_bar, NULL);
+    lv_obj_t *vehnet_icon = lv_label_create(tk_top_bar, NULL);
     lv_obj_add_style(vehnet_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
 
     switch (configuration.local_network_status)
@@ -342,7 +329,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     lv_obj_align(vehnet_icon, bluetooth_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
     /* LOCATION */
-    lv_obj_t *location_icon = lv_label_create(top_bar, NULL);
+    lv_obj_t *location_icon = lv_label_create(tk_top_bar, NULL);
     lv_obj_add_style(location_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
 
     switch (configuration.gps_status)
@@ -360,7 +347,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
         struct timespec spec;
         clock_gettime(CLOCK_REALTIME, &spec);
         long ms = spec.tv_nsec / 1000000;
-        lv_obj_set_style_local_text_opa(location_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, (((ms + 333) % 1000) < 500) ? LV_OPA_0 : LV_OPA_100);
+        lv_obj_set_style_local_text_opa(location_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, ((ms % 1000) >= 500) ? LV_OPA_0 : LV_OPA_100);
         break;
 
     case TK_GPS_STATUS_OFF:
@@ -373,7 +360,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     lv_obj_align(location_icon, vehnet_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
     /* WARNING */
-    lv_obj_t *warning_icon = lv_label_create(top_bar, NULL);
+    lv_obj_t *warning_icon = lv_label_create(tk_top_bar, NULL);
 
     switch (configuration.warning_level)
     {
@@ -402,7 +389,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
         struct timespec spec;
         clock_gettime(CLOCK_REALTIME, &spec);
         long ms = spec.tv_nsec / 1000000;
-        lv_obj_set_style_local_text_opa(warning_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, (((ms + 667) % 1000) < 500) ? LV_OPA_0 : LV_OPA_100);
+        lv_obj_set_style_local_text_opa(warning_icon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, ((ms % 1000) < 500) ? LV_OPA_0 : LV_OPA_100);
         break;
 
     case TK_WARNING_ICON_NONE:
@@ -415,7 +402,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     lv_obj_align(warning_icon, location_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
     /* DIAGNOSIS */
-    lv_obj_t *diag_icon = lv_label_create(top_bar, NULL);
+    lv_obj_t *diag_icon = lv_label_create(tk_top_bar, NULL);
     lv_obj_add_style(diag_icon, LV_LABEL_PART_MAIN, &tk_style_top_bar_icon);
     switch (configuration.connected_tool_icon)
     {
@@ -432,5 +419,5 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
 
     lv_obj_align(diag_icon, warning_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
-    return top_bar;
+    return tk_top_bar;
 }

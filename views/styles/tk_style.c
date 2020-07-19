@@ -46,7 +46,7 @@ lv_color_t get_themed_near_background_color()
     int mix;
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
-        mix = 190;
+        mix = 230;
     }
     else
     {
