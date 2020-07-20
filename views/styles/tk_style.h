@@ -38,5 +38,6 @@ lv_style_t tk_style_far_background;
 lv_style_t tk_style_top_bar_icon;
 lv_style_t tk_style_top_bar_icon_warn;
 lv_style_t tk_style_top_bar_icon_error;
+lv_style_t tk_style_no_background_borders;
 
 #endif

@@ -30,6 +30,7 @@ void tk_top_bar_refresher_task(lv_task_t *task)
         .temp_c = 35.435235,
         .warning_level = TK_WARNING_ICON_INFO,
         .connected_tool_icon = TK_TOOL_ICON_TECHNICIAN};
+
     if (tk_top_bar != NULL)
         lv_obj_del(tk_top_bar);
 

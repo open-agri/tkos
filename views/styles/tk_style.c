@@ -89,7 +89,6 @@ void tk_styles_init(void)
 
     // BACKGROUND
     lv_style_init(&tk_style_far_background);
-    lv_color_t aaa = get_themed_far_background_color();
     lv_style_set_bg_color(&tk_style_far_background, LV_STATE_DEFAULT, get_themed_far_background_color());
 
     // BARS
@@ -104,14 +103,19 @@ void tk_styles_init(void)
     lv_style_init(&tk_style_top_bar_icon);
     lv_style_set_text_font(&tk_style_top_bar_icon, LV_STATE_DEFAULT, &icons_16);
     lv_style_set_text_color(&tk_style_top_bar_icon, LV_STATE_DEFAULT, (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) ? LV_COLOR_WHITE : LV_COLOR_BLACK);
-    
+
     // ICON (WARNING)
     lv_style_init(&tk_style_top_bar_icon_warn);
     lv_style_set_text_font(&tk_style_top_bar_icon_warn, LV_STATE_DEFAULT, &icons_16);
     lv_style_set_text_color(&tk_style_top_bar_icon_warn, LV_STATE_DEFAULT, (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) ? TK_COLOR_YELLOW_LIGHT : TK_COLOR_YELLOW_DARK);
-    
+
     // ICON (ERROR)
     lv_style_init(&tk_style_top_bar_icon_error);
     lv_style_set_text_font(&tk_style_top_bar_icon_error, LV_STATE_DEFAULT, &icons_16);
     lv_style_set_text_color(&tk_style_top_bar_icon_error, LV_STATE_DEFAULT, (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) ? TK_COLOR_RED_LIGHT : TK_COLOR_RED_DARK);
+
+    // NO BACKGROUND AND BORDERS
+    lv_style_init(&tk_style_no_background_borders);
+    lv_style_set_bg_opa(&tk_style_no_background_borders, LV_STATE_DEFAULT, LV_OPA_0);
+    lv_style_set_border_width(&tk_style_no_background_borders, LV_STATE_DEFAULT, 0);
 }
