@@ -3,7 +3,7 @@
 //
 
 #include "tk_style.h"
-#include "malloc.h"
+#include <stdlib.h>
 
 void set_default_shadow(lv_style_t *style, int height)
 {
@@ -29,7 +29,6 @@ lv_color_t get_themed_bar_background_color()
 
 lv_color_t get_themed_far_background_color()
 {
-    lv_color_t color = get_themed_bar_background_color();
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
         return (lv_color_t){8, 8, 8, 255};
