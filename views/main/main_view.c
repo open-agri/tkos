@@ -88,7 +88,10 @@ tk_view build_main_view()
   // Bottom bar cofniguration
   tk_bottom_bar_button right = {
       .text = "Menu",
-      .click_callback = button_event_callback};
+      .click_callback = button_event_callback,
+      .menu = {(tk_menu_item){.text = "First"},
+               (tk_menu_item){.text = "Second"}},
+      .items_count = 2};
 
   tk_bottom_bar_configuration bb_conf = {
       .right_button = right};

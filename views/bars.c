@@ -1,11 +1,14 @@
-#include "bars.h"
 #include "lvgl/lvgl.h"
-#include "../tkos.h"
 #include "styles/tk_style.h"
 #include "fonts/icons.h"
+#include "../tkos.h"
+#include "bars.h"
+#include "esp_log.h"
 
 #include <stdio.h>
 #include <time.h> // For flashing icons and actual time
+
+#define TAG "bars"
 
 tk_bottom_bar_configuration original_bottom_bar_configuration;
 
@@ -13,8 +16,28 @@ bool menu_open = false;
 bool menu_flag = false;
 
 lv_obj_t *menu;
-lv_obj_t *bottom_bar;
 lv_group_t *menu_group;
+lv_obj_t *bottom_bar;
+
+static void menu_event_cb(lv_obj_t *obj, lv_event_t event)
+{
+    ESP_LOGD(TAG, "Menu group event callback");
+    if (event == LV_EVENT_KEY)
+    {
+        ESP_LOGD(TAG, "Menu group event callback received a key");
+        uint32_t *key = lv_event_get_data();
+        if (*key == LV_KEY_LEFT || *key == LV_KEY_UP || *key == LV_KEY_PREV)
+        {
+            ESP_LOGD(TAG, "Menu group event callback moving list up");
+            lv_list_up(menu);
+        }
+        else if (*key == LV_KEY_RIGHT || *key == LV_KEY_DOWN || *key == LV_KEY_NEXT)
+        {
+            ESP_LOGD(TAG, "Menu group event callback moving list down");
+            lv_list_down(menu);
+        }
+    }
+}
 
 void hide_menu(lv_obj_t *menu)
 {
@@ -35,27 +58,19 @@ void hide_menu(lv_obj_t *menu)
 
 void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
 {
-
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
     tk_menu_item *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
 
     // Menu generation
     // TODO: Automatic resize
     menu = lv_list_create(lv_scr_act(), NULL);
+    menu_group = lv_group_create();
+    lv_group_add_obj(menu_group, menu);
     lv_list_set_scrollbar_mode(menu, LV_SCROLLBAR_MODE_AUTO);
     lv_list_set_anim_time(menu, 200);
     lv_obj_set_width(menu, 140);
     lv_obj_add_style(menu, LV_LIST_PART_BG, &tk_style_menu);
     lv_obj_add_style(menu, LV_LIST_PART_SCROLLABLE, &tk_style_menu);
-
-    // Group init (list does not work with this configuration)
-    menu_group = lv_group_create();
-
-#ifdef SIMULATOR
-    lv_indev_set_group(lv_indev_get_act(), menu_group);
-#else
-    lv_indev_set_group(encoder_indev, menu_group);
-#endif
 
     lv_obj_t *btn;
     unsigned int tot_height = 0;
@@ -69,10 +84,13 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
         // Set callback to be retrieved later in user_data
         // TODO: Create a callback which executes this pointer on tap, for eventual future touchscreen systems
         lv_obj_set_user_data(btn, menu_items[i].click_callback);
-
-        // Add to group
-        lv_group_add_obj(menu_group, btn);
     }
+
+    // Event callback
+    lv_indev_set_group(encoder_indev, menu_group);
+    lv_group_set_editing(menu_group, true);
+    lv_group_focus_obj(menu);
+    lv_obj_set_event_cb(menu, menu_event_cb);
 
     // Update height
     lv_obj_set_height(menu, (tot_height <= 276) ? tot_height : 276);
@@ -143,7 +161,7 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
         if (menu_open)
         {
             // Select item (execute function pointed by user data of the focused button)
-            ((tk_void_callback)(lv_group_get_focused(menu_group)->user_data))();
+            ((tk_void_callback)(lv_list_get_btn_selected(menu)->user_data))();
             // Close menu
             hide_menu(menu);
         }
@@ -261,7 +279,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     int hours = timeinfo->tm_hour;
     if (!configuration.twenty_four_hours)
     {
-        strncpy(ampm, hours > 12 ? " PM" : " AM", 3);
+        strncpy(ampm, hours > 12 ? " PM" : " AM", 4);
         hours = hours % 12;
     }
 
@@ -278,11 +296,11 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
     if (!configuration.celsius)
     {
         temperature = (temperature * (9.0 / 5.0)) + 32.0;
-        strncpy(unit, "°F", 3);
+        strncpy(unit, "°F", 4);
     }
     else
     {
-        strncpy(unit, "°C", 3);
+        strncpy(unit, "°C", 4);
     }
 
     char temperature_text[10] = {};

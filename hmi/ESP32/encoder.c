@@ -68,8 +68,10 @@ void hmi_encoder_init()
 bool hmi_encoder_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
 {
     data->enc_diff = hmi_encoder_moves();
-    if (data->enc_diff != 0)
+    if (data->enc_diff != 0) {
         ESP_LOGD(TAG, "Encoder delta: %d", data->enc_diff);
+        data->key = data->enc_diff < 0 ? LV_KEY_LEFT : LV_KEY_RIGHT;
+    }
 
     // Encoder with no button
     data->state = LV_INDEV_STATE_REL;

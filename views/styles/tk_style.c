@@ -19,11 +19,11 @@ lv_color_t get_themed_bar_background_color()
 {
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
-        return (lv_color_t){24, 24, 24, 255};
+        return LV_COLOR_MAKE(24, 24, 24);
     }
     else
     {
-        return (lv_color_t){237, 237, 237, 255};
+        return LV_COLOR_MAKE(237, 237, 237);
     }
 }
 
@@ -31,7 +31,7 @@ lv_color_t get_themed_far_background_color()
 {
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
-        return (lv_color_t){8, 8, 8, 255};
+        return LV_COLOR_MAKE(8, 8, 8);
     }
     else
     {

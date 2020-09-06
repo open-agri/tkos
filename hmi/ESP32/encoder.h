@@ -4,8 +4,8 @@
 #include "lvgl/lvgl.h"
 #include "driver/gpio.h"
 
-#define HMI_ENCODER_PIN_A 26
-#define HMI_ENCODER_PIN_B 25
+#define HMI_ENCODER_PIN_A 25
+#define HMI_ENCODER_PIN_B 26
 
 #define HMI_ENCODER_INVERT 0
 #define HMI_ENCODER_DEB_US 15000 // Debounce time

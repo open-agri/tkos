@@ -4,8 +4,8 @@
 #include "lvgl/lvgl.h"
 #include "driver/gpio.h"
 
-#define HMI_BUTTON_PIN_LEFT 32
-#define HMI_BUTTON_PIN_RIGHT 33
+#define HMI_BUTTON_PIN_LEFT 16
+#define HMI_BUTTON_PIN_RIGHT 17
 
 #define HMI_BUTTON_ID_LEFT 1
 #define HMI_BUTTON_ID_RIGHT 0
