@@ -9,10 +9,10 @@ static void button_event_callback()
   // case LV_EVENT_CLICKED:view_navigate(build_settings_info_view, true);
 }
 
-void first_callback() { printf("First pressed."); }
-void second_callback() { printf("Second pressed."); }
-void third_callback() { printf("Third pressed."); }
-void fourth_callback() { printf("Fourth pressed."); }
+void first_callback() { printf("First pressed.\n"); }
+void second_callback() { printf("Second pressed.\n"); }
+void third_callback() { printf("Third pressed.\n"); }
+void fourth_callback() { printf("Fourth pressed.\n"); }
 
 tk_view build_main_view()
 {
@@ -89,8 +89,8 @@ tk_view build_main_view()
   tk_bottom_bar_button right = {
       .text = "Menu",
       .click_callback = button_event_callback,
-      .menu = {(tk_menu_item){.text = "First"},
-               (tk_menu_item){.text = "Second"}},
+      .menu = {(tk_menu_item){.text = "First", .click_callback = first_callback},
+               (tk_menu_item){.text = "Second", .click_callback = second_callback}},
       .items_count = 2};
 
   tk_bottom_bar_configuration bb_conf = {

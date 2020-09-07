@@ -78,7 +78,7 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
     {
         btn = lv_list_add_btn(menu, NULL, menu_items[i].text);
         lv_obj_add_style(btn, LV_BTN_PART_MAIN, &tk_style_menu_button);
-        lv_obj_set_style_local_pad_ver(btn, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 6);
+        lv_obj_set_style_local_pad_ver(btn, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 12);
         tot_height += lv_obj_get_height(btn);
 
         // Set callback to be retrieved later in user_data
@@ -86,11 +86,9 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
         lv_obj_set_user_data(btn, menu_items[i].click_callback);
     }
 
-    // Event callback
     lv_indev_set_group(encoder_indev, menu_group);
-    lv_group_set_editing(menu_group, true);
     lv_group_focus_obj(menu);
-    lv_obj_set_event_cb(menu, menu_event_cb);
+    lv_group_set_editing(menu_group, true);
 
     // Update height
     lv_obj_set_height(menu, (tot_height <= 276) ? tot_height : 276);

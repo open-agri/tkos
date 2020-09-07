@@ -61,7 +61,7 @@ void tk_styles_init(void)
     // MENU BUTTON
     lv_style_init(&tk_style_menu_button);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_DEFAULT, LV_OPA_TRANSP);
-    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_TRANSP);
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_100);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_PRESSED, LV_OPA_100);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_EDITED, LV_OPA_100);
     lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_PRESSED, LV_THEME_DEFAULT_COLOR_SECONDARY);
