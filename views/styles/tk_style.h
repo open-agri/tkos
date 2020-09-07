@@ -8,6 +8,9 @@
 #include "lvgl/lvgl.h"
 void tk_styles_init(void);
 
+lv_color_t tk_get_primary_color(void);
+lv_color_t tk_get_secondary_color(void);
+
 // COLORS
 #define TK_COLOR_RED_DARK LV_COLOR_MAKE(0xeb, 0x3b, 0x5a)
 #define TK_COLOR_RED_LIGHT LV_COLOR_MAKE(0xfc, 0x5c, 0x65)
@@ -33,6 +36,7 @@ void tk_styles_init(void);
 // STYLES
 lv_style_t tk_style_menu_button;
 lv_style_t tk_style_menu;
+lv_style_t tk_style_menu_fullscreen;
 lv_style_t tk_style_bar;
 lv_style_t tk_style_far_background;
 lv_style_t tk_style_top_bar_icon;

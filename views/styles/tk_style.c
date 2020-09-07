@@ -1,9 +1,29 @@
-//
-// Created by riccardo on 26/06/20.
-//
+/**
+ * @file tk_style.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief Styles for TractorKit.
+ * @version 0.1
+ * @date 2020-09-07
+ * 
+ * 
+ */
 
 #include "tk_style.h"
 #include <stdlib.h>
+
+#undef LV_THEME_DEFAULT_COLOR_PRIMARY
+#undef LV_THEME_DEFAULT_COLOR_SECONDARY
+#define LV_THEME_DEFAULT_COLOR_PRIMARY tk_get_primary_color()
+#define LV_THEME_DEFAULT_COLOR_SECONDARY tk_get_secondary_color()
+
+// TODO: Implement accent changing
+lv_color_t tk_get_primary_color() {
+    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_ORANGE_DARK : TK_COLOR_ORANGE_LIGHT;
+}
+
+lv_color_t tk_get_secondary_color() {
+    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_RED_DARK : TK_COLOR_RED_LIGHT;
+}
 
 void set_default_shadow(lv_style_t *style, int height)
 {
@@ -57,7 +77,6 @@ lv_color_t get_themed_near_background_color()
 // TODO: Call on theme change
 void tk_styles_init(void)
 {
-
     // MENU BUTTON
     lv_style_init(&tk_style_menu_button);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_DEFAULT, LV_OPA_TRANSP);
@@ -85,6 +104,11 @@ void tk_styles_init(void)
     lv_style_set_pad_right(&tk_style_menu, LV_STATE_DEFAULT, 0);
     lv_style_set_line_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
     lv_style_set_bg_color(&tk_style_menu, LV_STATE_DEFAULT, get_themed_near_background_color());
+
+    // FULLSCREEN MENU
+    lv_style_init(&tk_style_menu_fullscreen);
+    lv_style_copy(&tk_style_menu_fullscreen, &tk_style_menu);
+    lv_style_set_radius(&tk_style_menu_fullscreen, LV_STATE_DEFAULT, 0);
 
     // BACKGROUND
     lv_style_init(&tk_style_far_background);

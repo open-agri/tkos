@@ -112,7 +112,7 @@ static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
 
     switch (event)
     {
-    case LV_EVENT_CLICKED:
+    case LV_EVENT_SHORT_CLICKED:
         // Clicked: execute callback when menus closed, close menu when open
         if (menu_open)
         {
@@ -154,7 +154,7 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
 
     switch (event)
     {
-    case LV_EVENT_CLICKED:
+    case LV_EVENT_SHORT_CLICKED:
         // Clicked: execute callback when menus closed, select item when open
         if (menu_open)
         {

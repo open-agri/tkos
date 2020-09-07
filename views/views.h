@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
 #include "bars.h"
+#include "tkos.h"
 
 // Views
 #include "main/main_view.h"
-// TODO: Add screen
-// #include "settings/settings_info_view.h"
+#include "menu/menu_view.h"
 
 #include "styles/tk_style.h"
 

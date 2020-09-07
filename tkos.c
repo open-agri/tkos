@@ -1,3 +1,13 @@
+/**
+ * @file tkos.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief The main file for starting tkos.
+ * @version 0.1
+ * @date 2020-09-07
+ * 
+ * 
+ */
+
 #include "tkos.h"
 
 // LVGL includes
@@ -10,33 +20,10 @@
 #include "hmi/ESP32/buttons.h"
 #endif
 
+#include "views/ui_refresh/top_bar_refresh.h"
 #include "views/views.h"
 #include "views/styles/tk_style.h"
 
-lv_obj_t *tk_top_bar;
-
-void tk_top_bar_refresher_task(lv_task_t *task)
-{
-    // TODO: Move this task to another file
-    // TODO: Change this call, it's just a test for the top bar
-    // TODO: Move data away from this struct, leave only configuration (another struct + centralized data?)
-    tk_top_bar_configuration conf = {
-        .bluetooth_connected = true,
-        .gps_status = TK_GPS_STATUS_CONNECTING,
-        .local_network_status = TK_VEHNET_CONNECTING,
-        .local_network_connected_device_count = 3,
-        .celsius = false,
-        .twenty_four_hours = false,
-        .temp_c = 35.435235,
-        .warning_level = TK_WARNING_ICON_INFO,
-        .connected_tool_icon = TK_TOOL_ICON_TECHNICIAN};
-
-    if (tk_top_bar != NULL)
-        lv_obj_del(tk_top_bar);
-
-    tk_top_bar = build_top_bar(conf);
-    lv_obj_align(tk_top_bar, lv_layer_top(), LV_ALIGN_IN_TOP_MID, 0, 0);
-}
 
 void tkos_init(void)
 {
@@ -58,6 +45,11 @@ static void lv_tick_task(void *arg)
 //you should lock on the very same semaphore!
 SemaphoreHandle_t xGuiSemaphore;
 
+/**
+ * @brief The starting point for tkos. The main task for UI-related jobs.
+ * 
+ * @param pvParameter 
+ */
 void guiTask(void *pvParameter)
 {
 

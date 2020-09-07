@@ -4,11 +4,12 @@
 
 // TODO: Create refresher function
 
-static void button_event_callback()
+static void right_button_event_callback()
 {
-  // case LV_EVENT_CLICKED:view_navigate(build_settings_info_view, true);
+  view_navigate(build_menu_view, true);
 }
 
+// TODO: Delete
 void first_callback() { printf("First pressed.\n"); }
 void second_callback() { printf("Second pressed.\n"); }
 void third_callback() { printf("Third pressed.\n"); }
@@ -88,13 +89,18 @@ tk_view build_main_view()
   // Bottom bar cofniguration
   tk_bottom_bar_button right = {
       .text = "Menu",
-      .click_callback = button_event_callback,
+      .click_callback = right_button_event_callback,
       .menu = {(tk_menu_item){.text = "First", .click_callback = first_callback},
                (tk_menu_item){.text = "Second", .click_callback = second_callback}},
       .items_count = 2};
 
+  tk_bottom_bar_button left = {
+      .text = "Brightness",
+      .click_callback = NULL};
+
   tk_bottom_bar_configuration bb_conf = {
-      .right_button = right};
+      .right_button = right,
+      .left_button = left};
 
   // Return struct
   tk_view main_view = {
