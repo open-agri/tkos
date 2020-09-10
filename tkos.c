@@ -29,7 +29,7 @@ void tkos_init(void)
 {
     tk_styles_init();
 
-    lv_task_create(tk_top_bar_refresher_task, 100, LV_TASK_PRIO_LOW, NULL);
+    lv_task_create(tk_top_bar_refresher_task, 20, LV_TASK_PRIO_MID, NULL);
 }
 
 #ifndef SIMULATOR

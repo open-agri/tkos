@@ -10,7 +10,7 @@
 
 #define TAG "bars"
 
-tk_bottom_bar_configuration original_bottom_bar_configuration;
+tk_bottom_bar_configuration_t original_bottom_bar_configuration;
 
 bool menu_open = false;
 bool menu_flag = false;
@@ -56,10 +56,10 @@ void hide_menu(lv_obj_t *menu)
     lv_obj_align(bottom_bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 }
 
-void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
+void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
 {
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
-    tk_menu_item *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
+    tk_menu_item_t *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
 
     // Menu generation
     // TODO: Automatic resize
@@ -99,7 +99,7 @@ void show_menu(tk_bottom_bar_configuration current_bb_conf, bool left)
 
     // Update bar
     lv_obj_del(bottom_bar);
-    tk_bottom_bar_configuration temp_bb_conf = current_bb_conf;
+    tk_bottom_bar_configuration_t temp_bb_conf = current_bb_conf;
     strcpy(temp_bb_conf.right_button.text, "Select   " LV_SYMBOL_OK);
     strcpy(temp_bb_conf.left_button.text, LV_SYMBOL_LEFT "   Back");
     bottom_bar = build_bottom_bar(temp_bb_conf, false);
@@ -193,7 +193,7 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
     }
 }
 
-lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool original)
+lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool original)
 {
 
     /* BACKGROUND */
@@ -257,7 +257,7 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration configuration, bool origi
     return bottom_bar;
 }
 
-lv_obj_t *build_top_bar(tk_top_bar_configuration configuration)
+lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
 {
 
     /* BACKGROUND */

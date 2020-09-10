@@ -3,6 +3,6 @@
 
 #include "../tk_view.h"
 
-tk_view build_main_view();
+tk_view_t build_main_view();
 
 #endif

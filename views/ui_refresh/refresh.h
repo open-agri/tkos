@@ -1,6 +1,5 @@
-#ifndef TOP_BAR_REFRESHER_H
-#define TOP_BAR_REFRESHER_H
-
+#ifndef REFRESH_H
+#define REFRESH_H
 
 #include "lvgl.h"
 

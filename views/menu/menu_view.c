@@ -7,7 +7,7 @@ void left_button_event_callback()
   view_navigate_back();
 }
 
-tk_view build_menu_view()
+tk_view_t build_menu_view()
 {
 
   // Content
@@ -36,23 +36,23 @@ tk_view build_menu_view()
   }
 
   // Bottom bar cofniguration
-  // tk_bottom_bar_button right = {
+  // tk_bottom_bar_button_t right = {
   //     .text = "Menu",
   //     .click_callback = right_button_event_callback,
-  //     .menu = {(tk_menu_item){.text = "First", .click_callback = first_callback},
-  //              (tk_menu_item){.text = "Second", .click_callback = second_callback}},
+  //     .menu = {(tk_menu_item_t){.text = "First", .click_callback = first_callback},
+  //              (tk_menu_item_t){.text = "Second", .click_callback = second_callback}},
   //     .items_count = 2};
 
-  tk_bottom_bar_button left = {
+  tk_bottom_bar_button_t left = {
       .text = LV_SYMBOL_LEFT "   Back",
       .click_callback = left_button_event_callback};
 
-  tk_bottom_bar_configuration bb_conf = {
+  tk_bottom_bar_configuration_t bb_conf = {
       // .right_button = right,
       .left_button = left};
 
   // Return struct
-  tk_view main_view = {
+  tk_view_t main_view = {
       .content = main_view_content,
       .bottom_bar_configuration = bb_conf};
 
