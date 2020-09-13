@@ -13,6 +13,11 @@
 
 #include "lvgl/lvgl.h"
 
+#undef LV_THEME_DEFAULT_COLOR_PRIMARY
+#undef LV_THEME_DEFAULT_COLOR_SECONDARY
+#define LV_THEME_DEFAULT_COLOR_PRIMARY tk_get_primary_color()
+#define LV_THEME_DEFAULT_COLOR_SECONDARY tk_get_secondary_color()
+
 /**
  * @brief Initializes all the TractorKit styles. This function should be called before drawing any UI.
  * 

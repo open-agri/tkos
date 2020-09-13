@@ -8,7 +8,7 @@
  * 
  */
 
-#include "../views.h"
+#include "ui/views.h"
 #include "esp_log.h"
 
 #include <stdio.h>
@@ -19,7 +19,7 @@
  * @brief The bottom bar's left button click callback.
  * 
  */
-void left_button_click_callback()
+static void left_button_click_callback()
 {
   ESP_LOGI(TAG, "Left button pressed.");
   // view_navigate_back();
@@ -29,7 +29,7 @@ void left_button_click_callback()
  * @brief The bottom bar's right button click callback.
  * 
  */
-void left_button_click_callback()
+static void right_button_click_callback()
 {
   ESP_LOGI(TAG, "Right button pressed.");
 }
@@ -45,11 +45,11 @@ tk_view_t build_template_view()
   ESP_LOGI(TAG, "Building view.");
 
   // Content
-  lv_obj_t *main_view_content = lv_cont_create(NULL, NULL);
-  lv_obj_add_style(main_view_content, LV_CONT_PART_MAIN, &tk_style_far_background);
+  lv_obj_t *view_content = lv_cont_create(NULL, NULL);
+  lv_obj_add_style(view_content, LV_CONT_PART_MAIN, &tk_style_far_background);
 
   // Group (for encoder)
-  lv_group_t *menu_group = lv_group_create();
+  lv_group_t *group = lv_group_create();
 
   // Bottom bar configuration
   tk_bottom_bar_button_t right = {
@@ -69,7 +69,7 @@ tk_view_t build_template_view()
 
   // Return struct
   tk_view_t main_view = {
-      .content = main_view_content,
+      .content = view_content,
       .bottom_bar_configuration = bb_conf};
 
   ESP_LOGD(TAG, "View built successfully.");

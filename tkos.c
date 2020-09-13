@@ -20,9 +20,9 @@
 #include "hmi/ESP32/buttons.h"
 #endif
 
-#include "views/ui_refresh/refresh.h"
-#include "views/views.h"
-#include "views/styles/tk_style.h"
+#include "ui/refresh/refresh.h"
+#include "ui/views.h"
+#include "ui/styles/tk_style.h"
 
 
 /**

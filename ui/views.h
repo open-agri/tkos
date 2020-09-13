@@ -13,14 +13,16 @@
 
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
-#include "bars.h"
 #include "tkos.h"
+#include "ui/bars.h"
 
 // Views
-#include "main/main_view.h"
-#include "menu/menu_view.h"
+#include "ui/views/main/main_view.h"
+#include "ui/views/menu/menu_view.h"
+#include "ui/views/brightness/brightness_view.h"
 
-#include "styles/tk_style.h"
+// Last: override colors
+#include "ui/styles/tk_style.h"
 
 typedef tk_view_t (*tk_view_generator)(void);
 

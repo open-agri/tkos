@@ -8,8 +8,8 @@
  * 
  */
 
-#include "../views.h"
-#include "engine.h"
+#include "ui/views.h"
+#include "model/engine.h"
 
 #include "esp_log.h"
 
@@ -102,6 +102,16 @@ static void right_button_click_callback()
 }
 
 /**
+ * @brief The bottom bar's left button click callback.
+ * 
+ */
+static void left_button_click_callback()
+{
+  ESP_LOGI(TAG, "Left button clicked. Navigating to brightness view.");
+  view_navigate(build_brightness_view, true);
+}
+
+/**
  * @brief The main view generator.
  * 
  * @return tk_view_t The generated view.
@@ -112,14 +122,14 @@ tk_view_t build_main_view()
   ESP_LOGI(TAG, "Building view.");
 
   // Content
-  lv_obj_t *main_view_content = lv_cont_create(NULL, NULL);
-  lv_obj_add_style(main_view_content, LV_CONT_PART_MAIN, &tk_style_far_background);
+  lv_obj_t *view_content = lv_cont_create(NULL, NULL);
+  lv_obj_add_style(view_content, LV_CONT_PART_MAIN, &tk_style_far_background);
 
   // Compass
   // TODO: Compass builder.
 
   // Arcs
-  lv_obj_t *dashboard_container = lv_cont_create(main_view_content, NULL);
+  lv_obj_t *dashboard_container = lv_cont_create(view_content, NULL);
   lv_obj_add_style(dashboard_container, LV_CONT_PART_MAIN, &tk_style_no_background_borders);
   lv_cont_set_fit2(dashboard_container, LV_FIT_MAX, LV_FIT_TIGHT);
   lv_cont_set_layout(dashboard_container, LV_LAYOUT_PRETTY_MID);
@@ -184,7 +194,7 @@ tk_view_t build_main_view()
   lv_label_set_text(arc_r_small_label, "rpm");
   lv_obj_align(arc_r_small_label, arc_r_big_label, LV_ALIGN_OUT_BOTTOM_MID, 0, -8);
 
-  lv_obj_align(dashboard_container, main_view_content, LV_ALIGN_CENTER, 0, 32);
+  lv_obj_align(dashboard_container, view_content, LV_ALIGN_CENTER, 0, 32);
 
   // Bottom bar configuration
   tk_bottom_bar_button_t right = {
@@ -193,7 +203,7 @@ tk_view_t build_main_view()
 
   tk_bottom_bar_button_t left = {
       .text = "Brightness",
-      .click_callback = NULL};
+      .click_callback = left_button_click_callback};
 
   tk_bottom_bar_configuration_t bb_conf = {
       .right_button = right,
@@ -201,7 +211,7 @@ tk_view_t build_main_view()
 
   // Return struct
   tk_view_t main_view = {
-      .content = main_view_content,
+      .content = view_content,
       .bottom_bar_configuration = bb_conf};
 
   ESP_LOGD(TAG, "View built successfully.");

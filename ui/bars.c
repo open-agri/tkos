@@ -9,10 +9,10 @@
  */
 
 #include "lvgl/lvgl.h"
-#include "styles/tk_style.h"
-#include "fonts/icons.h"
-#include "../tkos.h"
-#include "bars.h"
+#include "ui/styles/tk_style.h"
+#include "ui/fonts/icons.h"
+#include "ui/views.h"
+#include "ui/bars.h"
 #include "esp_log.h"
 
 #include <stdio.h>
@@ -203,9 +203,12 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
 
             // Select item (execute function pointed by user data of the focused button)
             tk_void_callback cb = (tk_void_callback)lv_list_get_btn_selected(menu)->user_data;
-            if(cb != NULL) {
+            if (cb != NULL)
+            {
                 (cb)();
-            } else {
+            }
+            else
+            {
                 ESP_LOGW(TAG, "The selected button does not have a click callback. Please create one or remove the button.");
             }
 
@@ -280,7 +283,7 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
     lv_obj_add_style(bottom_bar, LV_CONT_PART_MAIN, &tk_style_bar);
 
     /* LEFT BUTTON */
-    if (strlen(configuration.left_button.text))
+    if (configuration.left_button.text != NULL)
     {
         lv_obj_t *left_button = lv_btn_create(bottom_bar, NULL);
         lv_obj_set_size(left_button, 120, 36);
@@ -305,7 +308,7 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
     lv_obj_align(center_label, bottom_bar, LV_ALIGN_CENTER, 0, 0);
 
     /* RIGHT BUTTON */
-    if (strlen(configuration.right_button.text))
+    if (configuration.right_button.text != NULL)
     {
         lv_obj_t *right_button = lv_btn_create(bottom_bar, NULL);
         lv_obj_set_size(right_button, 120, 36);

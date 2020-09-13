@@ -11,11 +11,6 @@
 #include "tk_style.h"
 #include <stdlib.h>
 
-#undef LV_THEME_DEFAULT_COLOR_PRIMARY
-#undef LV_THEME_DEFAULT_COLOR_SECONDARY
-#define LV_THEME_DEFAULT_COLOR_PRIMARY tk_get_primary_color()
-#define LV_THEME_DEFAULT_COLOR_SECONDARY tk_get_secondary_color()
-
 // TODO: Implement accent changing
 /**
  * @brief Gets the primary color based on the current theme and color settings.
@@ -23,7 +18,7 @@
  * @return lv_color_t The primary color.
  */
 lv_color_t tk_get_primary_color() {
-    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_ORANGE_DARK : TK_COLOR_ORANGE_LIGHT;
+    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_BLUE_DARK : TK_COLOR_BLUE_LIGHT;
 }
 
 /**
@@ -32,7 +27,7 @@ lv_color_t tk_get_primary_color() {
  * @return lv_color_t The secondary color.
  */
 lv_color_t tk_get_secondary_color() {
-    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_RED_DARK : TK_COLOR_RED_LIGHT;
+    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_GREEN_LIGHT : TK_COLOR_GREEN_DARK;
 }
 
 /**

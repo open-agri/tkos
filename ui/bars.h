@@ -22,7 +22,7 @@ typedef void (*tk_void_callback)(void);
  */
 typedef struct
 {
-    char text[60];
+    char *text;
     tk_void_callback click_callback;
 } tk_menu_item_t;
 
@@ -32,7 +32,7 @@ typedef struct
  */
 typedef struct
 {
-    char text[30];
+    char *text;
     tk_void_callback click_callback;
     int items_count;
     tk_menu_item_t menu[10];

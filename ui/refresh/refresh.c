@@ -8,10 +8,11 @@
  * 
  */
 
-#include "refresh.h"
-#include "bars.h"
-#include "views/views.h"
-#include "engine.h"
+#include "ui/views.h"
+#include "ui/bars.h"
+#include "ui/refresh/refresh.h"
+
+#include "model/engine.h"
 
 #include "esp_log.h"
 

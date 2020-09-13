@@ -1,5 +1,5 @@
-file(GLOB_RECURSE SOURCES tkos.c views/*.c views/*/*.c hmi/*/*.c model/*/*.c)
-set(INCLUDES . views/ hmi/ model/)
+file(GLOB_RECURSE SOURCES tkos.c ui/*.c ui/*/*.c ui/views/*/*.c hmi/*/*.c model/*/*.c)
+set(INCLUDES .)
 
 idf_component_register(SRCS ${SOURCES}
                        INCLUDE_DIRS ${INCLUDES}

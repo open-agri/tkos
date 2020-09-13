@@ -11,7 +11,7 @@
 #include "freertos/semphr.h"
 #endif
 
-#include "views/views.h"
+#include "ui/views.h"
 
 // Definitions
 #define LV_TICK_PERIOD_MS 5

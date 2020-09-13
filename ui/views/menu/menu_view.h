@@ -11,7 +11,7 @@
 #ifndef MENU_VIEW_H
 #define MENU_VIEW_H
 
-#include "../tk_view.h"
+#include "ui/tk_view.h"
 
 /**
  * @brief The menu view generator.
