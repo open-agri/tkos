@@ -19,7 +19,7 @@
  * @brief The bottom bar's left button click callback.
  * 
  */
-void left_button_event_callback()
+void left_button_click_callback()
 {
   ESP_LOGI(TAG, "Left button pressed. Navigating back.");
   view_navigate_back();
@@ -60,7 +60,7 @@ tk_view_t build_menu_view()
     lv_obj_add_style(btn, LV_BTN_PART_MAIN, &tk_style_menu_button);
   }
 
-  // Bottom bar cofniguration
+  // Bottom bar configuration
   // tk_bottom_bar_button_t right = {
   //     .text = "Menu",
   //     .click_callback = right_button_click_callback,
@@ -70,7 +70,7 @@ tk_view_t build_menu_view()
 
   tk_bottom_bar_button_t left = {
       .text = LV_SYMBOL_LEFT "   Back",
-      .click_callback = left_button_event_callback};
+      .click_callback = left_button_click_callback};
 
   tk_bottom_bar_configuration_t bb_conf = {
       // .right_button = right,

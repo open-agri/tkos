@@ -202,7 +202,13 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
             ESP_LOGD(TAG, "Menu is open, calling button specific callback.");
 
             // Select item (execute function pointed by user data of the focused button)
-            ((tk_void_callback)(lv_list_get_btn_selected(menu)->user_data))();
+            tk_void_callback cb = (tk_void_callback)lv_list_get_btn_selected(menu)->user_data;
+            if(cb != NULL) {
+                (cb)();
+            } else {
+                ESP_LOGW(TAG, "The selected button does not have a click callback. Please create one or remove the button.");
+            }
+
             // Close menu
             hide_menu(menu);
         }
