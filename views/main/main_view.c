@@ -45,26 +45,31 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
   // Left arc
   if (obj == arc_l)
   {
+    ESP_LOGD(TAG, "Received a refresh event for left arc, value is <TODO> [km/h - MPH].");
     lv_arc_set_value(obj, 0);
   }
   // Left arc's value label
   else if (obj == arc_l_big_label)
   {
+    ESP_LOGD(TAG, "Received a refresh event for left value label, value is <TODO> [km/h - MPH].");
   }
   // Left arc's unit label
   else if (obj == arc_l_small_label)
   {
+    ESP_LOGD(TAG, "Received a refresh event for left unit label, unit is [km/h - MPH].");
   }
   // Right arc
   else if (obj == arc_r)
   {
     if (tk_engine_last_data.rpm_available)
     {
+      ESP_LOGD(TAG, "Received a refresh event for right arc, value is %.2f RPM.", tk_engine_last_data.rpm);
       lv_arc_set_range(obj, 0, 5000);
       lv_arc_set_value(obj, (int)tk_engine_last_data.rpm);
     }
     else
     {
+      ESP_LOGW(TAG, "Received a refresh event for right arc, but RPM data is not available.");
       lv_arc_set_value(obj, 0);
     }
   }
@@ -76,9 +81,11 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
       char val[5];
       itoa((int)tk_engine_last_data.rpm, val, 10);
       lv_label_set_text(obj, val);
+      ESP_LOGD(TAG, "Received a refresh event for right arc label, content is %s.", val);
     }
     else
     {
+      ESP_LOGW(TAG, "Received a refresh event for right value label, but RPM data is not available.");
       lv_label_set_text(obj, "---");
     }
   }
@@ -90,6 +97,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
  */
 static void right_button_click_callback()
 {
+  ESP_LOGI(TAG, "Right button clicked. Navigating to menu view.");
   view_navigate(build_menu_view, true);
 }
 
@@ -100,6 +108,8 @@ static void right_button_click_callback()
  */
 tk_view_t build_main_view()
 {
+
+  ESP_LOGI(TAG, "Building view.");
 
   // Content
   lv_obj_t *main_view_content = lv_cont_create(NULL, NULL);
@@ -193,6 +203,8 @@ tk_view_t build_main_view()
   tk_view_t main_view = {
       .content = main_view_content,
       .bottom_bar_configuration = bb_conf};
+
+  ESP_LOGD(TAG, "View built successfully.");
 
   return main_view;
 }

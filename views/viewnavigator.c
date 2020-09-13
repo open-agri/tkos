@@ -9,6 +9,9 @@
  */
 
 #include "views.h"
+#include "esp_log.h"
+
+#define TAG "View navigator"
 
 /**
  * @brief An item of the internal view stack.
@@ -30,6 +33,9 @@ static tk_view_stack_item *view_stack_last = NULL;
  */
 void view_navigate(tk_view_generator generator, bool record_stack)
 {
+
+    ESP_LOGD(TAG, "Navigating %srecording stack.", record_stack ? "" : "without ");
+
     // Save old screen
     lv_obj_t *old_view_content = lv_scr_act();
 
@@ -70,6 +76,8 @@ void view_navigate(tk_view_generator generator, bool record_stack)
  */
 void view_navigate_back()
 {
+    ESP_LOGD(TAG, "Popping view stack.");
+    
     // Pop from the stack
     tk_view_stack_item *popped_item = view_stack_last;
 

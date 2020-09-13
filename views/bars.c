@@ -37,6 +37,8 @@ lv_obj_t *bottom_bar;
 void hide_menu(lv_obj_t *menu)
 {
 
+    ESP_LOGI(TAG, "Hiding menu.");
+
     // Hide the menu
     lv_obj_del(menu);
 
@@ -59,8 +61,11 @@ void hide_menu(lv_obj_t *menu)
  */
 void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
 {
+
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
     tk_menu_item_t *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
+
+    ESP_LOGI(TAG, "Building %s menu with %d items.", left ? "left" : "right", items);
 
     // Menu generation
     // TODO: Automatic resize
@@ -120,6 +125,9 @@ static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
     switch (event)
     {
     case LV_EVENT_SHORT_CLICKED:
+
+        ESP_LOGD(TAG, "Left button short clicked.");
+
         // Clicked: execute callback when menus closed, close menu when open
         if (menu_open)
         {
@@ -129,26 +137,42 @@ static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
         else
         {
             if (original_bottom_bar_configuration.left_button.click_callback != NULL)
+            {
+                ESP_LOGD(TAG, "Calling callback function.");
                 (original_bottom_bar_configuration.left_button.click_callback)();
+            }
+            else
+            {
+                ESP_LOGW(TAG, "No callback function available. This could be an unintended behaviour.");
+            }
         }
 
         break;
 
     case LV_EVENT_LONG_PRESSED:
+
+        ESP_LOGD(TAG, "Left button long pressed.");
+
         // Long press: show menu when both are closed and a menu is available
         if (!menu_open && original_bottom_bar_configuration.left_button.items_count > 0)
         {
+            ESP_LOGD(TAG, "Flagging menu for opening.");
+
             // Using a flag in order to delay the appearance of the menu on button release
             menu_flag = true;
         }
         break;
 
     case LV_EVENT_RELEASED:
+
+        ESP_LOGD(TAG, "Left button released.");
+
         // No continued pressure
         lv_obj_set_state(obj, LV_STATE_DEFAULT);
 
         if (menu_flag)
         {
+            ESP_LOGD(TAG, "Triggering menu opening.");
             show_menu(original_bottom_bar_configuration, true);
             menu_flag = false;
         }
@@ -168,9 +192,15 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
     switch (event)
     {
     case LV_EVENT_SHORT_CLICKED:
+
+        ESP_LOGD(TAG, "Right button short clicked.");
+
         // Clicked: execute callback when menus closed, select item when open
         if (menu_open)
         {
+
+            ESP_LOGD(TAG, "Menu is open, calling button specific callback.");
+
             // Select item (execute function pointed by user data of the focused button)
             ((tk_void_callback)(lv_list_get_btn_selected(menu)->user_data))();
             // Close menu
@@ -179,26 +209,43 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
         else
         {
             if (original_bottom_bar_configuration.right_button.click_callback != NULL)
+            {
+                ESP_LOGD(TAG, "Calling callback function.");
                 (original_bottom_bar_configuration.right_button.click_callback)();
+            }
+            else
+            {
+                ESP_LOGW(TAG, "No callback function available. This could be an unintended behaviour.");
+            }
         }
 
         break;
 
     case LV_EVENT_LONG_PRESSED:
+
+        ESP_LOGD(TAG, "Right button long pressed.");
+
         // Long press: show menu when both are closed and a menu is available
         if (!menu_open && original_bottom_bar_configuration.right_button.items_count > 0)
         {
+
+            ESP_LOGD(TAG, "Flagging menu for opening.");
+
             // Using a flag in order to delay the appearance of the menu on button release
             menu_flag = true;
         }
         break;
 
     case LV_EVENT_RELEASED:
+
+        ESP_LOGD(TAG, "Right button released.");
+
         // No continued pressure
         lv_obj_set_state(obj, LV_STATE_DEFAULT);
 
         if (menu_flag)
         {
+            ESP_LOGD(TAG, "Triggering menu opening.");
             show_menu(original_bottom_bar_configuration, false);
             menu_flag = false;
         }
@@ -215,6 +262,8 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
  */
 lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool original)
 {
+
+    ESP_LOGD(TAG, "Building bottom bar.");
 
     /* BACKGROUND */
 
@@ -274,6 +323,8 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
     if (original)
         original_bottom_bar_configuration = configuration;
 
+    ESP_LOGD(TAG, "Bottom bar built successfully%s.", original ? " and saved" : "");
+
     return bottom_bar;
 }
 
@@ -285,6 +336,8 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
  */
 lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
 {
+
+    ESP_LOGD(TAG, "Building top bar.");
 
     /* BACKGROUND */
     lv_obj_t *tk_top_bar = lv_cont_create(lv_layer_top(), NULL);
@@ -460,6 +513,8 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
     }
 
     lv_obj_align(diag_icon, warning_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
+
+    ESP_LOGD(TAG, "Top bar built successfully.");
 
     return tk_top_bar;
 }

@@ -91,7 +91,7 @@ void hmi_encoder_init()
 
     esp_timer_create(&encoder_timer_args, &hmi_encoder_delayer);
 
-    ESP_LOGI(TAG, "Encoder initialized");
+    ESP_LOGI(TAG, "Encoder initialized.");
 }
 
 /**
@@ -106,7 +106,7 @@ bool hmi_encoder_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
 {
     data->enc_diff = hmi_encoder_moves();
     if (data->enc_diff != 0) {
-        ESP_LOGD(TAG, "Encoder delta: %d", data->enc_diff);
+        ESP_LOGD(TAG, "Encoder delta: %d.", data->enc_diff);
         data->key = data->enc_diff < 0 ? LV_KEY_LEFT : LV_KEY_RIGHT;
     }
 

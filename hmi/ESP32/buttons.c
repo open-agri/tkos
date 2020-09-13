@@ -31,7 +31,7 @@ void hmi_buttons_sample(void *arg)
     int id = *(int *)arg;
     int pin;
 
-    ESP_LOGD(TAG, "Received interrupt for button %d.", id);
+    ESP_LOGD(TAG, "Sampling button %d.", id);
 
     // Associate id to pin
     switch (id)
@@ -102,7 +102,7 @@ void hmi_buttons_init()
 
     ESP_ERROR_CHECK(esp_timer_create(&buttons_timer_args, &hmi_buttons_delayer));
 
-    ESP_LOGI(TAG, "Buttons initialized");
+    ESP_LOGI(TAG, "Buttons initialized.");
 }
 
 /**

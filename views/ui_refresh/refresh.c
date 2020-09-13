@@ -49,7 +49,7 @@ void tk_top_bar_refresher_task(lv_task_t *task)
     // TODO: Remove fake data
     tk_engine_last_data.rpm = abs(tk_engine_last_data.rpm + (rand() % 6 - 3));
     tk_engine_last_data.rpm_available = true;
-    ESP_LOGD(TAG, "Setting engine RPM to %.2f", tk_engine_last_data.rpm);
+    ESP_LOGD(TAG, "[FAKE DATA] Setting engine RPM to %.2f", tk_engine_last_data.rpm);
 
     // Refresh screen
     lv_event_send_refresh_recursive(NULL);

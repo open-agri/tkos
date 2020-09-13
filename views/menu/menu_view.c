@@ -9,8 +9,11 @@
  */
 
 #include "../views.h"
+#include "esp_log.h"
 
 #include <stdio.h>
+
+#define TAG "Menu view"
 
 /**
  * @brief The bottom bar's left button click callback.
@@ -18,6 +21,7 @@
  */
 void left_button_event_callback()
 {
+  ESP_LOGI(TAG, "Left button pressed. Navigating back.");
   view_navigate_back();
 }
 
@@ -28,6 +32,8 @@ void left_button_event_callback()
  */
 tk_view_t build_menu_view()
 {
+
+  ESP_LOGI(TAG, "Building view.");
 
   // Content
   lv_obj_t *main_view_content = lv_cont_create(NULL, NULL);
@@ -74,6 +80,8 @@ tk_view_t build_menu_view()
   tk_view_t main_view = {
       .content = main_view_content,
       .bottom_bar_configuration = bb_conf};
+
+  ESP_LOGD(TAG, "View built successfully.");
 
   return main_view;
 }
