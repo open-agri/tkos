@@ -1,3 +1,13 @@
+/**
+ * @file bars.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief Generator for top and bottom bars. TODO: NOOOOOOOOOOOO, EACH SHOULD HAVE A FILE
+ * @version 0.1
+ * @date 2020-09-11
+ * 
+ * 
+ */
+
 #include "lvgl/lvgl.h"
 #include "styles/tk_style.h"
 #include "fonts/icons.h"
@@ -19,26 +29,11 @@ lv_obj_t *menu;
 lv_group_t *menu_group;
 lv_obj_t *bottom_bar;
 
-static void menu_event_cb(lv_obj_t *obj, lv_event_t event)
-{
-    ESP_LOGD(TAG, "Menu group event callback");
-    if (event == LV_EVENT_KEY)
-    {
-        ESP_LOGD(TAG, "Menu group event callback received a key");
-        uint32_t *key = lv_event_get_data();
-        if (*key == LV_KEY_LEFT || *key == LV_KEY_UP || *key == LV_KEY_PREV)
-        {
-            ESP_LOGD(TAG, "Menu group event callback moving list up");
-            lv_list_up(menu);
-        }
-        else if (*key == LV_KEY_RIGHT || *key == LV_KEY_DOWN || *key == LV_KEY_NEXT)
-        {
-            ESP_LOGD(TAG, "Menu group event callback moving list down");
-            lv_list_down(menu);
-        }
-    }
-}
-
+/**
+ * @brief Destroys the entire CPU. No, it hides a menu and restores the normal bottom bar configuration.
+ * 
+ * @param menu The menu to hide.
+ */
 void hide_menu(lv_obj_t *menu)
 {
 
@@ -56,6 +51,12 @@ void hide_menu(lv_obj_t *menu)
     lv_obj_align(bottom_bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 }
 
+/**
+ * @brief Shows a menu and adjusts the two bottom bar buttons by creating a temporary bottom bar configuration.
+ * 
+ * @param current_bb_conf The bottom bar configuration that from which to get the menu items.
+ * @param left Whether the menu should be shown on the left or right side of the screen.
+ */
 void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
 {
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
@@ -107,6 +108,12 @@ void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
     lv_obj_move_foreground(bottom_bar);
 }
 
+/**
+ * @brief Guess what? The bar's left button event callback.
+ * 
+ * @param obj The sender.
+ * @param event The received event.
+ */
 static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
 {
 
@@ -149,6 +156,12 @@ static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
     }
 }
 
+/**
+ * @brief The bar's right button event callback.
+ * 
+ * @param obj The sender.
+ * @param event The received event.
+ */
 static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
 {
 
@@ -193,6 +206,13 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
     }
 }
 
+/**
+ * @brief The bottom bar generator.
+ * 
+ * @param configuration The configuration to use for generating the bottom bar.
+ * @param original Set to true to save this configuration to `original_bottom_bar_configuration`.
+ * @return lv_obj_t* The generated bottom bar.
+ */
 lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool original)
 {
 
@@ -257,6 +277,12 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
     return bottom_bar;
 }
 
+/**
+ * @brief The top bar generator.
+ * 
+ * @param configuration The configuration to use for generating the top bar.
+ * @return lv_obj_t* The generated top bar.
+ */
 lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
 {
 

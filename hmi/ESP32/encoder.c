@@ -1,3 +1,13 @@
+/**
+ * @file encoder.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief Driver for rotary encoder.
+ * @version 0.1
+ * @date 2020-09-10
+ * 
+ * 
+ */
+
 #include "esp_log.h"
 #include "esp_timer.h"
 
@@ -10,6 +20,11 @@ static volatile int16_t hmi_encoder_delta = 0;
 
 esp_timer_handle_t hmi_encoder_delayer;
 
+
+/**
+ * @brief Samples both encoder lines and updates the delta accordingly.
+ * 
+ */
 void hmi_encoder_sample()
 {
     // Read direction data line
@@ -23,6 +38,11 @@ void hmi_encoder_sample()
     hmi_encoder_delta += (2 * input) - 1;
 }
 
+/**
+ * @brief The ISR for debouncing and starting the reading.
+ * 
+ * @param arg Unused.
+ */
 static void IRAM_ATTR hmi_encoder_isr(void *arg)
 {
     // Keep only the first edge and ignore next until DEB_US has passed (since the last edge)
@@ -35,6 +55,11 @@ static void IRAM_ATTR hmi_encoder_isr(void *arg)
     hmi_encoder_last_micros = esp_timer_get_time();
 }
 
+/**
+ * @brief Gets the encoder delta from the global variable, resets it and returns its value.
+ * 
+ * @return int16_t The encoder delta since last call of this function.
+ */
 int16_t hmi_encoder_moves()
 {
     int16_t temp = hmi_encoder_delta;
@@ -42,6 +67,10 @@ int16_t hmi_encoder_moves()
     return temp;
 }
 
+/**
+ * @brief Encoder driver initialization function
+ * 
+ */
 void hmi_encoder_init()
 {
     // GPIO setup
@@ -65,6 +94,14 @@ void hmi_encoder_init()
     ESP_LOGI(TAG, "Encoder initialized");
 }
 
+/**
+ * @brief The callback function for interfacing this driver with lvgl.
+ * 
+ * @param drv The indev driver.
+ * @param data The output data for the driver.
+ * @return true Never.
+ * @return false Always.
+ */
 bool hmi_encoder_read(lv_indev_drv_t *drv, lv_indev_data_t *data)
 {
     data->enc_diff = hmi_encoder_moves();

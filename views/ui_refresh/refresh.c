@@ -1,7 +1,17 @@
-#include "top_bar_refresh.h"
+/**
+ * @file refresh.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief Global refresh signal source.
+ * @version 0.1
+ * @date 2020-09-11
+ * 
+ * 
+ */
+
+#include "refresh.h"
 #include "bars.h"
 #include "views/views.h"
-#include "engine/engine.h"
+#include "engine.h"
 
 #include "esp_log.h"
 
@@ -9,6 +19,11 @@
 
 #define TAG "Refresher"
 
+/**
+ * @brief This is an lvgl task which is the source of the global refresh signal.
+ * 
+ * @param task Declared because lvgl tasks need this.
+ */
 void tk_top_bar_refresher_task(lv_task_t *task)
 {
     // TODO: Change this call, it's just a test for the top bar
@@ -31,6 +46,7 @@ void tk_top_bar_refresher_task(lv_task_t *task)
     tk_top_bar = build_top_bar(conf);
     lv_obj_align(tk_top_bar, lv_layer_top(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
+    // TODO: Remove fake data
     tk_engine_last_data.rpm = abs(tk_engine_last_data.rpm + (rand() % 6 - 3));
     tk_engine_last_data.rpm_available = true;
     ESP_LOGD(TAG, "Setting engine RPM to %.2f", tk_engine_last_data.rpm);

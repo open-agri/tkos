@@ -17,15 +17,31 @@
 #define LV_THEME_DEFAULT_COLOR_SECONDARY tk_get_secondary_color()
 
 // TODO: Implement accent changing
+/**
+ * @brief Gets the primary color based on the current theme and color settings.
+ * 
+ * @return lv_color_t The primary color.
+ */
 lv_color_t tk_get_primary_color() {
     return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_ORANGE_DARK : TK_COLOR_ORANGE_LIGHT;
 }
 
+/**
+ * @brief Gets the secondary color based on the current theme and color settings.
+ * 
+ * @return lv_color_t The secondary color.
+ */
 lv_color_t tk_get_secondary_color() {
     return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_RED_DARK : TK_COLOR_RED_LIGHT;
 }
 
-void set_default_shadow(lv_style_t *style, int height)
+/**
+ * @brief Set the default shadow for a style.
+ * 
+ * @param style The style on which to apply this shadow.
+ * @param height The height of the object on an imaginary z-axis coming out of the screen.
+ */
+void tk_set_default_shadow(lv_style_t *style, int height)
 {
     int radius = height * height / 2;
     lv_style_set_shadow_color(style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
@@ -35,7 +51,12 @@ void set_default_shadow(lv_style_t *style, int height)
     lv_style_set_shadow_width(style, LV_STATE_DEFAULT, radius);
 }
 
-lv_color_t get_themed_bar_background_color()
+/**
+ * @brief Get the bar background color for the current theme settings.
+ * 
+ * @return lv_color_t The bar background color.
+ */
+lv_color_t tk_get_themed_bar_background_color()
 {
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
@@ -47,7 +68,12 @@ lv_color_t get_themed_bar_background_color()
     }
 }
 
-lv_color_t get_themed_far_background_color()
+/**
+ * @brief Get the background color for far items for the current theme settings.
+ * 
+ * @return lv_color_t The background color.
+ */
+lv_color_t tk_get_themed_far_background_color()
 {
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
@@ -59,9 +85,14 @@ lv_color_t get_themed_far_background_color()
     }
 }
 
-lv_color_t get_themed_near_background_color()
+/**
+ * @brief Get the background color for near items for the current theme settings.
+ * 
+ * @return lv_color_t The background color.
+ */
+lv_color_t tk_get_themed_near_background_color()
 {
-    lv_color_t color = get_themed_bar_background_color();
+    lv_color_t color = tk_get_themed_bar_background_color();
     int mix;
     if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
     {
@@ -75,6 +106,10 @@ lv_color_t get_themed_near_background_color()
 }
 
 // TODO: Call on theme change
+/**
+ * @brief Initializes all the TractorKit styles. This function should be called before drawing any UI.
+ * 
+ */
 void tk_styles_init(void)
 {
     // MENU BUTTON
@@ -95,7 +130,7 @@ void tk_styles_init(void)
 
     // MENU
     lv_style_init(&tk_style_menu);
-    set_default_shadow(&tk_style_menu, 9);
+    tk_set_default_shadow(&tk_style_menu, 9);
     lv_style_set_radius(&tk_style_menu, LV_STATE_DEFAULT, 8);
     lv_style_set_clip_corner(&tk_style_menu, LV_STATE_DEFAULT, true);
     lv_style_set_border_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
@@ -103,7 +138,7 @@ void tk_styles_init(void)
     lv_style_set_pad_left(&tk_style_menu, LV_STATE_DEFAULT, 0);
     lv_style_set_pad_right(&tk_style_menu, LV_STATE_DEFAULT, 0);
     lv_style_set_line_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
-    lv_style_set_bg_color(&tk_style_menu, LV_STATE_DEFAULT, get_themed_near_background_color());
+    lv_style_set_bg_color(&tk_style_menu, LV_STATE_DEFAULT, tk_get_themed_near_background_color());
 
     // FULLSCREEN MENU
     lv_style_init(&tk_style_menu_fullscreen);
@@ -112,15 +147,15 @@ void tk_styles_init(void)
 
     // BACKGROUND
     lv_style_init(&tk_style_far_background);
-    lv_style_set_bg_color(&tk_style_far_background, LV_STATE_DEFAULT, get_themed_far_background_color());
+    lv_style_set_bg_color(&tk_style_far_background, LV_STATE_DEFAULT, tk_get_themed_far_background_color());
 
     // BARS
     lv_style_init(&tk_style_bar);
-    set_default_shadow(&tk_style_bar, 7);
+    tk_set_default_shadow(&tk_style_bar, 7);
     lv_style_set_radius(&tk_style_bar, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_bar, LV_STATE_DEFAULT, 0);
     lv_style_set_clip_corner(&tk_style_bar, LV_STATE_DEFAULT, true);
-    lv_style_set_bg_color(&tk_style_bar, LV_STATE_DEFAULT, get_themed_bar_background_color());
+    lv_style_set_bg_color(&tk_style_bar, LV_STATE_DEFAULT, tk_get_themed_bar_background_color());
 
     // ICON (NORMAL)
     lv_style_init(&tk_style_top_bar_icon);

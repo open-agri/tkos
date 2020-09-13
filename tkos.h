@@ -20,8 +20,12 @@
 lv_indev_t *encoder_indev;
 
 // Prototypes
-static void lv_tick_task(void *arg);
+
+/**
+ * @brief The starting point for tkos. The main task for UI-related jobs.
+ * 
+ * @param pvParameter 
+ */
 void guiTask(void *pvParameter);
-void tkos_init(void);
 
 #endif

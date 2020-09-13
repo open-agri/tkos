@@ -1,12 +1,31 @@
+/**
+ * @file menu_view.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief The menu view builder.
+ * @version 0.1
+ * @date 2020-09-10
+ * 
+ * 
+ */
+
 #include "../views.h"
 
 #include <stdio.h>
 
+/**
+ * @brief The bottom bar's left button click callback.
+ * 
+ */
 void left_button_event_callback()
 {
   view_navigate_back();
 }
 
+/**
+ * @brief The menu view generator.
+ * 
+ * @return tk_view_t The generated view.
+ */
 tk_view_t build_menu_view()
 {
 
@@ -38,7 +57,7 @@ tk_view_t build_menu_view()
   // Bottom bar cofniguration
   // tk_bottom_bar_button_t right = {
   //     .text = "Menu",
-  //     .click_callback = right_button_event_callback,
+  //     .click_callback = right_button_click_callback,
   //     .menu = {(tk_menu_item_t){.text = "First", .click_callback = first_callback},
   //              (tk_menu_item_t){.text = "Second", .click_callback = second_callback}},
   //     .items_count = 2};

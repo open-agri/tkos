@@ -1,5 +1,15 @@
+/**
+ * @file main_view.c
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief The main view builder.
+ * @version 0.1
+ * @date 2020-09-10
+ * 
+ * 
+ */
+
 #include "../views.h"
-#include "engine/engine.h"
+#include "engine.h"
 
 #include "esp_log.h"
 
@@ -15,6 +25,15 @@ lv_obj_t *arc_l_small_label;
 lv_obj_t *arc_r;
 lv_obj_t *arc_r_big_label;
 
+// TODO: Move to array.
+// TODO: Check defaults coherency in callback and in generator code.
+
+/**
+ * @brief Pushes new data to the widgets when they receive a refresh event.
+ * 
+ * @param obj The widget that called this callback function.
+ * @param event The event that the widget received.
+ */
 static void refresh_cb(lv_obj_t *obj, lv_event_t event)
 {
   if (event != LV_EVENT_REFRESH)
@@ -22,15 +41,21 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
 
   // TODO: Variable arc maximum stored in nvs
   // TODO: Implement kph/mph in nvs
+
+  // Left arc
   if (obj == arc_l)
   {
+    lv_arc_set_value(obj, 0);
   }
+  // Left arc's value label
   else if (obj == arc_l_big_label)
   {
   }
+  // Left arc's unit label
   else if (obj == arc_l_small_label)
   {
   }
+  // Right arc
   else if (obj == arc_r)
   {
     if (tk_engine_last_data.rpm_available)
@@ -43,6 +68,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
       lv_arc_set_value(obj, 0);
     }
   }
+  // Right arc's value label
   else if (obj == arc_r_big_label)
   {
     if (tk_engine_last_data.rpm_available)
@@ -58,11 +84,20 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
   }
 }
 
-static void right_button_event_callback()
+/**
+ * @brief The bottom bar's right button click callback.
+ * 
+ */
+static void right_button_click_callback()
 {
   view_navigate(build_menu_view, true);
 }
 
+/**
+ * @brief The main view generator.
+ * 
+ * @return tk_view_t The generated view.
+ */
 tk_view_t build_main_view()
 {
 
@@ -82,11 +117,13 @@ tk_view_t build_main_view()
   lv_obj_set_style_local_pad_ver(dashboard_container, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 0);
 
   // Left arc
+  // TODO: Eh?
+  // !!!!!!! WHAT? ANGLES? !!!!!!!!!!
   arc_l = lv_arc_create(dashboard_container, NULL);
   lv_obj_add_style(arc_l, LV_CONT_PART_MAIN, &tk_style_no_background_borders);
-  lv_arc_set_angles(arc_l, 60, 190);
   lv_arc_set_bg_angles(arc_l, 60, 300);
   lv_arc_set_rotation(arc_l, 90);
+  lv_arc_set_value(arc_l, 0);
   lv_obj_set_size(arc_l, 160, 160);
   lv_obj_set_style_local_pad_all(arc_l, LV_ARC_PART_BG, LV_STATE_DEFAULT, 0);
   lv_obj_set_event_cb(arc_l, refresh_cb);
@@ -114,6 +151,7 @@ tk_view_t build_main_view()
   // Right arc
   arc_r = lv_arc_create(dashboard_container, arc_l);
   lv_arc_set_rotation(arc_r, 90);
+  lv_arc_set_value(arc_r, 0);
   lv_obj_set_size(arc_r, 160, 160);
   lv_obj_set_event_cb(arc_r, refresh_cb);
 
@@ -141,7 +179,7 @@ tk_view_t build_main_view()
   // Bottom bar configuration
   tk_bottom_bar_button_t right = {
       .text = "Menu",
-      .click_callback = right_button_event_callback};
+      .click_callback = right_button_click_callback};
 
   tk_bottom_bar_button_t left = {
       .text = "Brightness",

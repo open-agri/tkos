@@ -1,14 +1,36 @@
-//
-// Created by riccardo on 26/06/20.
-//
+/**
+ * @file tk_style.h
+ * @author Riccardo Persello (riccardo.persello@icloud.com)
+ * @brief Styles for TractorKit.
+ * @version 0.1
+ * @date 2020-09-10
+ * 
+ * 
+ */
 
 #ifndef TK_STYLE_H
 #define TK_STYLE_H
 
 #include "lvgl/lvgl.h"
+
+/**
+ * @brief Initializes all the TractorKit styles. This function should be called before drawing any UI.
+ * 
+ */
 void tk_styles_init(void);
 
+/**
+ * @brief Gets the primary color based on the current theme and color settings.
+ * 
+ * @return lv_color_t The primary color.
+ */
 lv_color_t tk_get_primary_color(void);
+
+/**
+ * @brief Gets the secondary color based on the current theme and color settings.
+ * 
+ * @return lv_color_t The secondary color.
+ */
 lv_color_t tk_get_secondary_color(void);
 
 // COLORS

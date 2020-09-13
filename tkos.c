@@ -20,11 +20,15 @@
 #include "hmi/ESP32/buttons.h"
 #endif
 
-#include "views/ui_refresh/top_bar_refresh.h"
+#include "views/ui_refresh/refresh.h"
 #include "views/views.h"
 #include "views/styles/tk_style.h"
 
 
+/**
+ * @brief Initializes tkos and creates the refresh task
+ * 
+ */
 void tkos_init(void)
 {
     tk_styles_init();
@@ -33,6 +37,12 @@ void tkos_init(void)
 }
 
 #ifndef SIMULATOR
+
+/**
+ * @brief The lvgl tick task.
+ * 
+ * @param arg Unused.
+ */
 static void lv_tick_task(void *arg)
 {
     (void)arg;
