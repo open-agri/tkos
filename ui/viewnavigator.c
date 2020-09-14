@@ -42,9 +42,6 @@ void view_navigate(tk_view_generator generator, bool record_stack)
     // Generate tk view
     tk_view_t view = (generator)();
 
-    // Get configuration
-    tk_bottom_bar_configuration_t bar_conf = view.bottom_bar_configuration;
-
     // Get new screen (copy, otherwise gets corrupted)
     current_view_content = view.content;
 
@@ -62,8 +59,12 @@ void view_navigate(tk_view_generator generator, bool record_stack)
     lv_scr_load(current_view_content);
 
     // Draw bottom bar
-    lv_obj_t *bottom_bar = build_bottom_bar(bar_conf, true);
+    lv_obj_t *bottom_bar = build_bottom_bar(view.bottom_bar_configuration, true);
     lv_obj_align(bottom_bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+
+    // Draw top bar
+    lv_obj_t *top_bar = build_top_bar(view.top_bar_configuration);
+    lv_obj_align(top_bar, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
     // Destroy old screen
     if (old_view_content != NULL)

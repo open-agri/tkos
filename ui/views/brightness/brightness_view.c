@@ -41,12 +41,12 @@ static void right_button_click_callback()
   if (lv_group_get_editing(group))
   {
     lv_group_set_editing(group, false);
-    strncpy(rb_string, "Edit   " LV_SYMBOL_EDIT, 30);
+    strcpy(rb_string, "Edit   " LV_SYMBOL_EDIT);
   }
   else
   {
     lv_group_set_editing(group, true);
-    strncpy(rb_string, "Confirm   " LV_SYMBOL_OK, 30);
+    strcpy(rb_string, "Confirm   " LV_SYMBOL_OK);
   }
 
   lv_event_send_refresh_recursive(lv_scr_act());
@@ -63,8 +63,8 @@ tk_view_t build_brightness_view()
   ESP_LOGI(TAG, "Building view.");
 
   // Strings
-  strncpy(lb_string, LV_SYMBOL_LEFT "   Back", 30);
-  strncpy(rb_string, "Edit   " LV_SYMBOL_EDIT, 30);
+  strcpy(lb_string, LV_SYMBOL_LEFT "   Back");
+  strcpy(rb_string, "Edit   " LV_SYMBOL_EDIT);
 
   // Content
   lv_obj_t *view_content = lv_cont_create(NULL, NULL);

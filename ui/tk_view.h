@@ -20,6 +20,7 @@
 typedef struct {
     lv_obj_t *content;
     tk_bottom_bar_configuration_t bottom_bar_configuration;
+    tk_top_bar_configuration_t top_bar_configuration;
 } tk_view_t;
 
  //TK_VIEW_H

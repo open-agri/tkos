@@ -63,7 +63,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
         int hours = timeinfo->tm_hour;
         if (!global_datastore.unit_settings.clock_24h)
         {
-            strncpy(ampm, hours > 12 ? " PM" : " AM", 4);
+            strcpy(ampm, hours > 12 ? " PM" : " AM");
             hours = hours % 12;
         }
 
@@ -84,11 +84,11 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
             if (!global_datastore.unit_settings.celsius)
             {
                 temperature = (temperature * (9.0 / 5.0)) + 32.0;
-                strncpy(unit, "°F", 4);
+                strcpy(unit, "°F");
             }
             else
             {
-                strncpy(unit, "°C", 4);
+                strcpy(unit, "°C");
             }
 
             sprintf(temperature_text, "%.1f%s", temperature, unit);
@@ -296,11 +296,10 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
     lv_obj_align(tool_icon, warning_icon, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
     // Title
+    title_label = lv_label_create(bar, NULL);
+    lv_label_set_text(title_label, "");
     if (configuration.title != NULL)
-    {
-        title_label = lv_label_create(bar, NULL);
         lv_obj_align(title_label, bar, LV_ALIGN_CENTER, 0, 0);
-    }
 
     // Refresh setup
     lv_obj_set_event_cb(clock_label, refresh_cb);

@@ -31,7 +31,7 @@ lv_obj_t *left_button_label;
 lv_obj_t *center_label;
 lv_obj_t *right_button_label;
 
-tk_bottom_bar_configuration_t current_configuration;
+static tk_bottom_bar_configuration_t current_configuration;
 tk_bottom_bar_configuration_t original_configuration;
 
 bool menu_open;
@@ -48,6 +48,7 @@ lv_group_t *menu_group;
  */
 static void refresh_cb(lv_obj_t *obj, lv_event_t event)
 {
+
     if (event != LV_EVENT_REFRESH)
         return;
 
@@ -57,9 +58,12 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
         // Icon
         char label_text[40] = {};
         if (current_configuration.left_button.items_count > 0 && !menu_open)
-            strncpy(label_text, LV_SYMBOL_UP "   ", 7);
+            strcpy(label_text, LV_SYMBOL_UP "   ");
 
-        strncat(label_text, current_configuration.left_button.text, 34);
+        if (current_configuration.left_button.text != NULL)
+        {
+            strcat(label_text, current_configuration.left_button.text);
+        }
 
         // Label update
         lv_label_set_text(left_button_label, label_text);
@@ -67,18 +71,24 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
     // Center label
     else if (obj == center_label)
     {
-        lv_label_set_text(center_label, current_configuration.center_text);
+        if (current_configuration.center_text == NULL)
+            lv_label_set_text(center_label, "");
+        else
+            lv_label_set_text(center_label, current_configuration.center_text);
+
         lv_obj_align(center_label, bar, LV_ALIGN_CENTER, 0, 0);
     }
     // Right button label
     else if (obj == right_button_label)
     {
+
         // Icon
         char label_text[40] = {};
         if (current_configuration.right_button.items_count > 0 && !menu_open)
-            strncpy(label_text, LV_SYMBOL_UP "   ", 7);
+            strcpy(label_text, LV_SYMBOL_UP "   ");
 
-        strncat(label_text, current_configuration.right_button.text, 34);
+        if (current_configuration.right_button.text != NULL)
+            strcat(label_text, current_configuration.right_button.text);
 
         // Label update
         lv_label_set_text(right_button_label, label_text);
@@ -339,41 +349,50 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
     lv_obj_add_style(bar, LV_CONT_PART_MAIN, &tk_style_bar);
 
     // Left button
-    if (configuration.left_button.text != NULL)
+    if (current_configuration.left_button.text != NULL)
     {
         lv_obj_t *left_button = lv_btn_create(bar, NULL);
         lv_obj_set_size(left_button, 120, 36);
         lv_obj_set_event_cb(left_button, left_button_event_callback);
+        lv_obj_align(left_button, bar, LV_ALIGN_IN_LEFT_MID, 0, 0);
         lv_obj_add_style(left_button, LV_BTN_PART_MAIN, &tk_style_menu_button);
 
         // Label
         left_button_label = lv_label_create(left_button, NULL);
+        lv_label_set_text(left_button_label, "");
+
+        // Refresh
+        lv_obj_set_event_cb(left_button_label, refresh_cb);
     }
+
 
     // Center label
     center_label = lv_label_create(bar, NULL);
+    lv_label_set_text(center_label, "");
     lv_obj_align(center_label, bar, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_event_cb(center_label, refresh_cb);
 
     // Right button
-    if (configuration.right_button.text != NULL)
+    if (current_configuration.right_button.text != NULL)
     {
         lv_obj_t *right_button = lv_btn_create(bar, NULL);
         lv_obj_set_size(right_button, 120, 36);
         lv_obj_set_event_cb(right_button, right_button_event_callback);
+        lv_obj_align(right_button, bar, LV_ALIGN_IN_RIGHT_MID, 0, 0);
         lv_obj_add_style(right_button, LV_BTN_PART_MAIN, &tk_style_menu_button);
 
         // Label
         right_button_label = lv_label_create(right_button, NULL);
+        lv_label_set_text(right_button_label, "");
+
+        // Refresh
+        lv_obj_set_event_cb(right_button_label, refresh_cb);
     }
+
 
     // Save configuration
     if (original)
-        original_configuration = configuration;
-
-    // Refresh setup
-    lv_obj_set_event_cb(left_button_label, refresh_cb);
-    lv_obj_set_event_cb(center_label, refresh_cb);
-    lv_obj_set_event_cb(right_button_label, refresh_cb);
+        original_configuration = current_configuration;
 
     ESP_LOGD(TAG, "Bottom bar built successfully%s.", original ? " and saved" : "");
 

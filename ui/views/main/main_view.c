@@ -202,7 +202,7 @@ tk_view_t build_main_view()
       .click_callback = right_button_click_callback};
 
   tk_bottom_bar_button_t left = {
-      .text = "Brightness",
+      .text = "MENU",
       .click_callback = left_button_click_callback};
 
   tk_bottom_bar_configuration_t bb_conf = {
