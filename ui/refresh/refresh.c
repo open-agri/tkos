@@ -17,6 +17,7 @@
 #include "model/datastore.h"
 
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
 
 
 #define TAG "Refresher"
@@ -35,4 +36,5 @@ void refresher_task(lv_task_t *task)
 
     // Refresh screen
     lv_event_send_refresh_recursive(NULL);
+    ESP_LOGI(TAG, "Mem free: %d", xPortGetFreeHeapSize());
 }

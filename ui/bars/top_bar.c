@@ -24,7 +24,7 @@
 
 #define TAG "Top bar"
 
-lv_obj_t *bar;
+static lv_obj_t *bar;
 
 // Updatable widgets
 lv_obj_t *clock_label;
@@ -36,7 +36,7 @@ lv_obj_t *warning_icon;
 lv_obj_t *tool_icon;
 lv_obj_t *title_label;
 
-tk_top_bar_configuration_t current_configuration;
+static tk_top_bar_configuration_t current_configuration;
 
 /**
  * @brief Pushes new data to the widgets when they receive a refresh event.
@@ -71,7 +71,10 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
 
         sprintf(time, "%02d%c%02d%s", hours, sep, timeinfo->tm_min, ampm);
         lv_label_set_text(clock_label, time);
-        lv_obj_align(clock_label, bar, LV_ALIGN_CENTER, 0, 0);
+        if (current_configuration.title == NULL)
+            lv_obj_align(clock_label, bar, LV_ALIGN_CENTER, 0, 0);
+        else
+            lv_obj_align(clock_label, bar, LV_ALIGN_IN_LEFT_MID, 8, 0);
     }
     // Temperature label
     else if (obj == temperature_label)
@@ -256,6 +259,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
 
     // Clock
     clock_label = lv_label_create(bar, NULL);
+    lv_label_set_text(clock_label, "");
     if (configuration.title == NULL)
         lv_obj_align(clock_label, bar, LV_ALIGN_CENTER, 0, 0);
     else
@@ -263,6 +267,7 @@ lv_obj_t *build_top_bar(tk_top_bar_configuration_t configuration)
 
     // Temperature
     temperature_label = lv_label_create(bar, NULL);
+    lv_label_set_text(temperature_label, "");
     lv_obj_align(temperature_label, bar, LV_ALIGN_IN_RIGHT_MID, -8, 0);
 
     // Icons

@@ -24,7 +24,7 @@
 
 #define TAG "Bottom bar"
 
-lv_obj_t *bar;
+static lv_obj_t *bar;
 
 // Updatable widgets
 lv_obj_t *left_button_label;
@@ -172,8 +172,8 @@ void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
     // Update bar
     lv_obj_del(bar);
     tk_bottom_bar_configuration_t temp_bb_conf = current_bb_conf;
-    strcpy(temp_bb_conf.right_button.text, "Select   " LV_SYMBOL_OK);
-    strcpy(temp_bb_conf.left_button.text, LV_SYMBOL_LEFT "   Back");
+    temp_bb_conf.right_button.text = "Select   " LV_SYMBOL_OK;
+    temp_bb_conf.left_button.text = LV_SYMBOL_LEFT "   Back";
     bar = build_bottom_bar(temp_bb_conf, false);
     lv_obj_align(bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, 0);
     lv_obj_move_foreground(bar);

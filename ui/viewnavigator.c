@@ -11,7 +11,11 @@
 #include "views.h"
 #include "esp_log.h"
 
+#include "esp_heap_trace.h"
+
 #define TAG "View navigator"
+
+int stack_depth = 0;
 
 /**
  * @brief An item of the internal view stack.
@@ -33,11 +37,9 @@ static tk_view_stack_item *view_stack_last = NULL;
  */
 void view_navigate(tk_view_generator generator, bool record_stack)
 {
+    // ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_LEAKS));
 
     ESP_LOGD(TAG, "Navigating %srecording stack.", record_stack ? "" : "without ");
-
-    // Save old screen
-    lv_obj_t *old_view_content = lv_scr_act();
 
     // Generate tk view
     tk_view_t view = (generator)();
@@ -53,7 +55,11 @@ void view_navigate(tk_view_generator generator, bool record_stack)
         new_item->previous = view_stack_last;
 
         view_stack_last = new_item;
+        stack_depth++;
     }
+
+    lv_obj_clean(lv_scr_act());
+    lv_obj_clean(lv_layer_top());
 
     // Show new screen
     lv_scr_load(current_view_content);
@@ -66,9 +72,9 @@ void view_navigate(tk_view_generator generator, bool record_stack)
     lv_obj_t *top_bar = build_top_bar(view.top_bar_configuration);
     lv_obj_align(top_bar, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
-    // Destroy old screen
-    if (old_view_content != NULL)
-        lv_obj_del(old_view_content);
+    // ESP_ERROR_CHECK(heap_trace_stop());
+    // heap_trace_dump();
+    ESP_LOGI(TAG, "Navigation complete, stack depth is %d.", stack_depth);
 }
 
 /**
@@ -94,4 +100,5 @@ void view_navigate_back()
 
     // Free
     free(popped_item);
+    stack_depth--;
 }

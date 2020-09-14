@@ -101,10 +101,14 @@ tk_view_t build_brightness_view()
       .right_button = right,
       .left_button = left};
 
+  tk_top_bar_configuration_t tb_conf = {
+      .title = "Brightness"};
+
   // Return struct
   tk_view_t main_view = {
       .content = view_content,
-      .bottom_bar_configuration = bb_conf};
+      .bottom_bar_configuration = bb_conf, 
+      .top_bar_configuration = tb_conf};
 
   ESP_LOGD(TAG, "View built successfully.");
 
