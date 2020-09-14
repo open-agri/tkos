@@ -11,7 +11,6 @@
 #include "views.h"
 #include "esp_log.h"
 
-#include "esp_heap_trace.h"
 
 #define TAG "View navigator"
 
@@ -37,7 +36,6 @@ static tk_view_stack_item *view_stack_last = NULL;
  */
 void view_navigate(tk_view_generator generator, bool record_stack)
 {
-    // ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_LEAKS));
 
     ESP_LOGD(TAG, "Navigating %srecording stack.", record_stack ? "" : "without ");
 
@@ -72,8 +70,6 @@ void view_navigate(tk_view_generator generator, bool record_stack)
     lv_obj_t *top_bar = build_top_bar(view.top_bar_configuration);
     lv_obj_align(top_bar, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
-    // ESP_ERROR_CHECK(heap_trace_stop());
-    // heap_trace_dump();
     ESP_LOGI(TAG, "Navigation complete, stack depth is %d.", stack_depth);
 }
 

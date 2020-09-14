@@ -6,11 +6,11 @@
 #include "esp_freertos_hooks.h"
 #include "freertos/semphr.h"
 
-
 #include "ui/views.h"
 
 // Definitions
 #define LV_TICK_PERIOD_MS 5
+#define LV_THEME_LIVE_UPDATE 1
 
 // Global variables
 lv_indev_t *encoder_indev;
@@ -23,4 +23,3 @@ lv_indev_t *encoder_indev;
  * @param pvParameter 
  */
 void guiTask(void *pvParameter);
-

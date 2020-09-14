@@ -13,7 +13,7 @@
 
 #include "encoder.h"
 
-#define TAG "encoder"
+#define TAG "Encoder"
 
 static volatile int64_t hmi_encoder_last_micros = 0;
 static volatile int16_t hmi_encoder_delta = 0;

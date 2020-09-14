@@ -11,14 +11,19 @@
 #include "tk_style.h"
 #include <stdlib.h>
 
+#include "esp_log.h"
+
+#define TAG "Styles"
+
 // TODO: Implement accent changing
 /**
  * @brief Gets the primary color based on the current theme and color settings.
  * 
  * @return lv_color_t The primary color.
  */
-lv_color_t tk_get_primary_color() {
-    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_BLUE_DARK : TK_COLOR_BLUE_LIGHT;
+lv_color_t tk_get_primary_color(bool light)
+{
+    return light ? TK_COLOR_BLUE_LIGHT : TK_COLOR_BLUE_DARK;
 }
 
 /**
@@ -26,8 +31,9 @@ lv_color_t tk_get_primary_color() {
  * 
  * @return lv_color_t The secondary color.
  */
-lv_color_t tk_get_secondary_color() {
-    return LV_THEME_MATERIAL_FLAG_DARK ? TK_COLOR_GREEN_LIGHT : TK_COLOR_GREEN_DARK;
+lv_color_t tk_get_secondary_color(bool light)
+{
+    return light ? TK_COLOR_GREEN_LIGHT : TK_COLOR_GREEN_DARK;
 }
 
 /**
@@ -36,12 +42,12 @@ lv_color_t tk_get_secondary_color() {
  * @param style The style on which to apply this shadow.
  * @param height The height of the object on an imaginary z-axis coming out of the screen.
  */
-void tk_set_default_shadow(lv_style_t *style, int height)
+void tk_set_default_shadow(lv_style_t *style, int height, bool light)
 {
     int radius = height * height / 2;
     lv_style_set_shadow_color(style, LV_STATE_DEFAULT, LV_COLOR_BLACK);
     lv_style_set_shadow_opa(style, LV_STATE_DEFAULT,
-                            LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK ? LV_OPA_30 : LV_OPA_40);
+                            light ? LV_OPA_40 : LV_OPA_30);
     lv_style_set_shadow_ofs_y(style, LV_STATE_DEFAULT, 0);
     lv_style_set_shadow_width(style, LV_STATE_DEFAULT, radius);
 }
@@ -51,16 +57,9 @@ void tk_set_default_shadow(lv_style_t *style, int height)
  * 
  * @return lv_color_t The bar background color.
  */
-lv_color_t tk_get_themed_bar_background_color()
+lv_color_t tk_get_themed_bar_background_color(bool light)
 {
-    if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
-    {
-        return LV_COLOR_MAKE(24, 24, 24);
-    }
-    else
-    {
-        return LV_COLOR_MAKE(237, 237, 237);
-    }
+    return light? LV_COLOR_MAKE(237, 237, 237) : LV_COLOR_MAKE(24, 24, 24);
 }
 
 /**
@@ -68,16 +67,9 @@ lv_color_t tk_get_themed_bar_background_color()
  * 
  * @return lv_color_t The background color.
  */
-lv_color_t tk_get_themed_far_background_color()
+lv_color_t tk_get_themed_far_background_color(bool light)
 {
-    if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
-    {
-        return LV_COLOR_MAKE(8, 8, 8);
-    }
-    else
-    {
-        return LV_COLOR_WHITE;
-    }
+    return light ? LV_COLOR_WHITE : LV_COLOR_MAKE(8, 8, 8);
 }
 
 /**
@@ -85,18 +77,10 @@ lv_color_t tk_get_themed_far_background_color()
  * 
  * @return lv_color_t The background color.
  */
-lv_color_t tk_get_themed_near_background_color()
+lv_color_t tk_get_themed_near_background_color(bool light)
 {
-    lv_color_t color = tk_get_themed_bar_background_color();
-    int mix;
-    if (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK)
-    {
-        mix = 230;
-    }
-    else
-    {
-        mix = 100;
-    }
+    lv_color_t color = tk_get_themed_far_background_color(light);
+    int mix = light ? 100 : 230;
     return lv_color_mix(color, LV_COLOR_WHITE, mix);
 }
 
@@ -105,7 +89,7 @@ lv_color_t tk_get_themed_near_background_color()
  * @brief Initializes all the TractorKit styles. This function should be called before drawing any UI.
  * 
  */
-void tk_styles_init(void)
+void tk_styles_init(bool light)
 {
     // MENU BUTTON
     lv_style_init(&tk_style_menu_button);
@@ -113,8 +97,8 @@ void tk_styles_init(void)
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_100);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_PRESSED, LV_OPA_100);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_EDITED, LV_OPA_100);
-    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_PRESSED, LV_THEME_DEFAULT_COLOR_SECONDARY);
-    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_FOCUSED, LV_THEME_DEFAULT_COLOR_PRIMARY);
+    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_PRESSED, tk_get_primary_color(light));
+    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_FOCUSED, tk_get_primary_color(light));
     lv_style_set_radius(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_menu_button, LV_STATE_FOCUSED, 0);
@@ -125,7 +109,7 @@ void tk_styles_init(void)
 
     // MENU
     lv_style_init(&tk_style_menu);
-    tk_set_default_shadow(&tk_style_menu, 9);
+    tk_set_default_shadow(&tk_style_menu, 9, light);
     lv_style_set_radius(&tk_style_menu, LV_STATE_DEFAULT, 8);
     lv_style_set_clip_corner(&tk_style_menu, LV_STATE_DEFAULT, true);
     lv_style_set_border_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
@@ -133,7 +117,7 @@ void tk_styles_init(void)
     lv_style_set_pad_left(&tk_style_menu, LV_STATE_DEFAULT, 0);
     lv_style_set_pad_right(&tk_style_menu, LV_STATE_DEFAULT, 0);
     lv_style_set_line_width(&tk_style_menu, LV_STATE_DEFAULT, 0);
-    lv_style_set_bg_color(&tk_style_menu, LV_STATE_DEFAULT, tk_get_themed_near_background_color());
+    lv_style_set_bg_color(&tk_style_menu, LV_STATE_DEFAULT, tk_get_themed_near_background_color(light));
 
     // FULLSCREEN MENU
     lv_style_init(&tk_style_menu_fullscreen);
@@ -142,33 +126,35 @@ void tk_styles_init(void)
 
     // BACKGROUND
     lv_style_init(&tk_style_far_background);
-    lv_style_set_bg_color(&tk_style_far_background, LV_STATE_DEFAULT, tk_get_themed_far_background_color());
+    lv_style_set_bg_color(&tk_style_far_background, LV_STATE_DEFAULT, tk_get_themed_far_background_color(light));
 
     // BARS
     lv_style_init(&tk_style_bar);
-    tk_set_default_shadow(&tk_style_bar, 7);
+    tk_set_default_shadow(&tk_style_bar, 7, light);
     lv_style_set_radius(&tk_style_bar, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_bar, LV_STATE_DEFAULT, 0);
     lv_style_set_clip_corner(&tk_style_bar, LV_STATE_DEFAULT, true);
-    lv_style_set_bg_color(&tk_style_bar, LV_STATE_DEFAULT, tk_get_themed_bar_background_color());
+    lv_style_set_bg_color(&tk_style_bar, LV_STATE_DEFAULT, tk_get_themed_bar_background_color(light));
 
     // ICON (NORMAL)
     lv_style_init(&tk_style_top_bar_icon);
     lv_style_set_text_font(&tk_style_top_bar_icon, LV_STATE_DEFAULT, &icons_16);
-    lv_style_set_text_color(&tk_style_top_bar_icon, LV_STATE_DEFAULT, (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) ? LV_COLOR_WHITE : LV_COLOR_BLACK);
+    lv_style_set_text_color(&tk_style_top_bar_icon, LV_STATE_DEFAULT, light ? LV_COLOR_WHITE : LV_COLOR_BLACK);
 
     // ICON (WARNING)
     lv_style_init(&tk_style_top_bar_icon_warn);
     lv_style_set_text_font(&tk_style_top_bar_icon_warn, LV_STATE_DEFAULT, &icons_16);
-    lv_style_set_text_color(&tk_style_top_bar_icon_warn, LV_STATE_DEFAULT, (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) ? TK_COLOR_YELLOW_LIGHT : TK_COLOR_YELLOW_DARK);
+    lv_style_set_text_color(&tk_style_top_bar_icon_warn, LV_STATE_DEFAULT, light ? TK_COLOR_YELLOW_LIGHT : TK_COLOR_YELLOW_DARK);
 
     // ICON (ERROR)
     lv_style_init(&tk_style_top_bar_icon_error);
     lv_style_set_text_font(&tk_style_top_bar_icon_error, LV_STATE_DEFAULT, &icons_16);
-    lv_style_set_text_color(&tk_style_top_bar_icon_error, LV_STATE_DEFAULT, (LV_THEME_DEFAULT_FLAG == LV_THEME_MATERIAL_FLAG_DARK) ? TK_COLOR_RED_LIGHT : TK_COLOR_RED_DARK);
+    lv_style_set_text_color(&tk_style_top_bar_icon_error, LV_STATE_DEFAULT, light ? TK_COLOR_RED_LIGHT : TK_COLOR_RED_DARK);
 
     // NO BACKGROUND AND BORDERS
     lv_style_init(&tk_style_no_background_borders);
     lv_style_set_bg_opa(&tk_style_no_background_borders, LV_STATE_DEFAULT, LV_OPA_0);
     lv_style_set_border_width(&tk_style_no_background_borders, LV_STATE_DEFAULT, 0);
+
+    ESP_LOGI(TAG, "Generated styles for %s mode.", light ? "light" : "dark");
 }

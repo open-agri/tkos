@@ -12,30 +12,25 @@
 
 #include "lvgl/lvgl.h"
 
-#undef LV_THEME_DEFAULT_COLOR_PRIMARY
-#undef LV_THEME_DEFAULT_COLOR_SECONDARY
-#define LV_THEME_DEFAULT_COLOR_PRIMARY tk_get_primary_color()
-#define LV_THEME_DEFAULT_COLOR_SECONDARY tk_get_secondary_color()
-
 /**
  * @brief Initializes all the TractorKit styles. This function should be called before drawing any UI.
  * 
  */
-void tk_styles_init(void);
+void tk_styles_init(bool light);
 
 /**
  * @brief Gets the primary color based on the current theme and color settings.
  * 
  * @return lv_color_t The primary color.
  */
-lv_color_t tk_get_primary_color(void);
+lv_color_t tk_get_primary_color(bool light);
 
 /**
  * @brief Gets the secondary color based on the current theme and color settings.
  * 
  * @return lv_color_t The secondary color.
  */
-lv_color_t tk_get_secondary_color(void);
+lv_color_t tk_get_secondary_color(bool light);
 
 // COLORS
 #define TK_COLOR_RED_DARK LV_COLOR_MAKE(0xeb, 0x3b, 0x5a)

@@ -12,5 +12,5 @@
 
 typedef struct {
     bool automatic;
-    unsigned short int level;
+    double level;
 } tk_brightness_settings_t;

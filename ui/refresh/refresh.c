@@ -19,8 +19,9 @@
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 
-
 #define TAG "Refresher"
+
+int mem_free_last = 0;
 
 /**
  * @brief This is an lvgl task which is the source of the global refresh signal.
@@ -36,5 +37,10 @@ void refresher_task(lv_task_t *task)
 
     // Refresh screen
     lv_event_send_refresh_recursive(NULL);
-    ESP_LOGI(TAG, "Mem free: %d", xPortGetFreeHeapSize());
+
+    if (xPortGetFreeHeapSize() != mem_free_last)
+    {
+        mem_free_last = xPortGetFreeHeapSize();
+        ESP_LOGI(TAG, "Mem free: %d", xPortGetFreeHeapSize());
+    }
 }

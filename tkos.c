@@ -17,12 +17,13 @@
 
 #include "hmi/ESP32/encoder.h"
 #include "hmi/ESP32/buttons.h"
+#include "hmi/ESP32/brightness.h"
 
+#include "model/datastore.h"
 
 #include "ui/refresh/refresh.h"
 #include "ui/views.h"
 #include "ui/styles/tk_style.h"
-
 
 /**
  * @brief Initializes tkos and creates the refresh task
@@ -30,11 +31,11 @@
  */
 void tkos_init(void)
 {
-    tk_styles_init();
+    hmi_brightness_init(&(global_datastore.brightness_settings));
 
     lv_task_create(refresher_task, 20, LV_TASK_PRIO_MID, NULL);
+    lv_task_create(brightness_task, 100, LV_TASK_PRIO_MID, NULL);
 }
-
 
 /**
  * @brief The lvgl tick task.
@@ -133,4 +134,3 @@ void guiTask(void *pvParameter)
     //A task should NEVER return
     vTaskDelete(NULL);
 }
-

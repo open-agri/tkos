@@ -39,6 +39,7 @@ bool menu_flag;
 
 lv_obj_t *menu;
 lv_group_t *menu_group;
+lv_group_t *group_bak;
 
 /**
  * @brief Pushes new data to the widgets when they receive a refresh event.
@@ -117,6 +118,9 @@ void hide_menu(lv_obj_t *menu)
 
     // Note: build_bottom_bar automatically sets bar pointer
     lv_obj_align(bar, lv_scr_act(), LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+
+    // Restore group
+    lv_indev_set_group(encoder_indev, group_bak);
 }
 
 /**
@@ -127,6 +131,9 @@ void hide_menu(lv_obj_t *menu)
  */
 void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
 {
+
+    // Save last group
+    group_bak = encoder_indev->group;
 
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
     tk_menu_item_t *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;

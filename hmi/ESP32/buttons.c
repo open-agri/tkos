@@ -13,7 +13,7 @@
 
 #include "buttons.h"
 
-#define TAG "buttons"
+#define TAG "Buttons"
 
 static volatile uint64_t hmi_button_last_micros = 0;
 static volatile int16_t hmi_button_last = -1;
