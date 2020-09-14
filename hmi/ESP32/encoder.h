@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef ENCODER_H
-#define ENCODER_H
+#pragma once
 
 #include "lvgl/lvgl.h"
 #include "driver/gpio.h"
@@ -37,4 +36,3 @@ void hmi_encoder_init();
  */
 bool hmi_encoder_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 
-#endif

@@ -8,11 +8,10 @@
  * 
  */
 
-#ifndef TK_VIEW_H
-#define TK_VIEW_H
+#pragma once
 
 #include "lvgl/lvgl.h"
-#include "bars.h"
+#include "ui/bars/bars.h"
 
 /**
  * @brief Represents a view with its generated content and its contextualized bottom bar.
@@ -23,4 +22,4 @@ typedef struct {
     tk_bottom_bar_configuration_t bottom_bar_configuration;
 } tk_view_t;
 
-#endif //TK_VIEW_H
+ //TK_VIEW_H

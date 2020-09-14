@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef BUTTONS_H
-#define BUTTONS_H
+#pragma once
 
 #include "lvgl/lvgl.h"
 #include "driver/gpio.h"
@@ -42,4 +41,3 @@ void hmi_buttons_init();
  */
 bool hmi_buttons_read(lv_indev_drv_t *drv, lv_indev_data_t *data);
 
-#endif

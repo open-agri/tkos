@@ -12,7 +12,7 @@
 #include "ui/styles/tk_style.h"
 #include "ui/fonts/icons.h"
 #include "ui/views.h"
-#include "ui/bars.h"
+#include "ui/bars/bars.h"
 #include "esp_log.h"
 
 #include <stdio.h>
@@ -304,7 +304,7 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
 
     /* CENTER LABEL */
     lv_obj_t *center_label = lv_label_create(bottom_bar, NULL);
-    lv_label_set_text(center_label, configuration.center_symbol);
+    lv_label_set_text(center_label, configuration.center_text);
     lv_obj_align(center_label, bottom_bar, LV_ALIGN_CENTER, 0, 0);
 
     /* RIGHT BUTTON */

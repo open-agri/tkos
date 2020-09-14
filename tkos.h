@@ -1,15 +1,11 @@
-#ifndef TKOS_H
-#define TKOS_H
-
-// #define SIMULATOR
+#pragma once
 
 // FreeRTOS includes
-#ifndef SIMULATOR
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_freertos_hooks.h"
 #include "freertos/semphr.h"
-#endif
+
 
 #include "ui/views.h"
 
@@ -28,4 +24,3 @@ lv_indev_t *encoder_indev;
  */
 void guiTask(void *pvParameter);
 
-#endif

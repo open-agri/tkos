@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef ENGINE_H
-#define ENGINE_H
+#pragma once
 
 /**
  * @brief A struct for representing data related to the engine.
@@ -33,10 +32,3 @@ typedef struct {
 
 } tk_engine_data_t;
 
-/**
- * @brief The most updated data about the engine.
- * 
- */
-tk_engine_data_t tk_engine_last_data;
-
-#endif

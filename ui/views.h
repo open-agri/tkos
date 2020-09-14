@@ -8,13 +8,12 @@
  * 
  */
 
-#ifndef VIEWS_H
-#define VIEWS_H
+#pragma once
 
 #include <stdlib.h>
 #include "lvgl/lvgl.h"
 #include "tkos.h"
-#include "ui/bars.h"
+#include "ui/bars/bars.h"
 
 // Views
 #include "ui/views/main/main_view.h"
@@ -42,4 +41,3 @@ void view_navigate(tk_view_generator generator, bool record_stack);
  */
 void view_navigate_back();
 
-#endif

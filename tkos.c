@@ -13,12 +13,11 @@
 // LVGL includes
 #include "lvgl/lvgl.h"
 
-#ifndef SIMULATOR
 #include "lvgl_helpers.h"
 
 #include "hmi/ESP32/encoder.h"
 #include "hmi/ESP32/buttons.h"
-#endif
+
 
 #include "ui/refresh/refresh.h"
 #include "ui/views.h"
@@ -33,10 +32,9 @@ void tkos_init(void)
 {
     tk_styles_init();
 
-    lv_task_create(tk_top_bar_refresher_task, 20, LV_TASK_PRIO_MID, NULL);
+    lv_task_create(refresher_task, 20, LV_TASK_PRIO_MID, NULL);
 }
 
-#ifndef SIMULATOR
 
 /**
  * @brief The lvgl tick task.
@@ -135,4 +133,4 @@ void guiTask(void *pvParameter)
     //A task should NEVER return
     vTaskDelete(NULL);
 }
-#endif
+

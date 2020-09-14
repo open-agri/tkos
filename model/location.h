@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef LOCATION_H
-#define LOCATION_H
+#pragma once
 
 /**
  * @brief A struct for representing data related to the current location.
@@ -63,11 +62,13 @@ typedef struct {
 
 } tk_location_data_t;
 
-// TODO: Move last data(s) to a separate file
 /**
- * @brief The most updated data about the engine.
+ * @brief The possible states of the GPS system.
  * 
  */
-tk_location_data_t tk_location_last_data;
+typedef enum {
+    TK_GPS_STATUS_OFF,
+    TK_GPS_STATUS_CONNECTING,
+    TK_GPS_STATUS_CONNECTED
+} tk_gps_status_t;
 
-#endif

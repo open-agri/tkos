@@ -9,7 +9,7 @@
  */
 
 #include "ui/views.h"
-#include "model/engine.h"
+#include "model/datastore.h"
 
 #include "esp_log.h"
 
@@ -61,11 +61,11 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
   // Right arc
   else if (obj == arc_r)
   {
-    if (tk_engine_last_data.rpm_available)
+    if (global_datastore.engine_data.rpm_available)
     {
-      ESP_LOGD(TAG, "Received a refresh event for right arc, value is %.2f RPM.", tk_engine_last_data.rpm);
+      ESP_LOGD(TAG, "Received a refresh event for right arc, value is %.2f RPM.", global_datastore.engine_data.rpm);
       lv_arc_set_range(obj, 0, 5000);
-      lv_arc_set_value(obj, (int)tk_engine_last_data.rpm);
+      lv_arc_set_value(obj, (int)global_datastore.engine_data.rpm);
     }
     else
     {
@@ -76,10 +76,10 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
   // Right arc's value label
   else if (obj == arc_r_big_label)
   {
-    if (tk_engine_last_data.rpm_available)
+    if (global_datastore.engine_data.rpm_available)
     {
       char val[5];
-      itoa((int)tk_engine_last_data.rpm, val, 10);
+      itoa((int)global_datastore.engine_data.rpm, val, 10);
       lv_label_set_text(obj, val);
       ESP_LOGD(TAG, "Received a refresh event for right arc label, content is %s.", val);
     }

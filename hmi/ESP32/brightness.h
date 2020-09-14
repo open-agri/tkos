@@ -8,6 +8,8 @@
  * 
  */
 
+#include "model/brightness.h"
+
 /**
  * @brief Sets whether the brightness should vary based on current brightness.
  * 
@@ -41,6 +43,6 @@ unsigned short int hmi_brightness_get_value(void);
  * @brief Initializes the brightness manager.
  * 
  */
-void hmi_brightness_init(void);
+void hmi_brightness_init(tk_brightness_settings_t settings);
 
 // TODO: Automatic theme switch.

@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef BRIGHTNESS_VIEW_H
-#define BRIGHTNESS_VIEW_H
+#pragma once
 
 #include "ui/tk_view.h"
 
@@ -20,4 +19,3 @@
  */
 tk_view_t build_brightness_view();
 
-#endif

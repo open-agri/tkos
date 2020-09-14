@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef TEMPLATE_VIEW_H
-#define TEMPLATE_VIEW_H
+#pragma once
 
 #include "ui/tk_view.h"
 
@@ -20,4 +19,3 @@
  */
 tk_view_t build_template_view();
 
-#endif

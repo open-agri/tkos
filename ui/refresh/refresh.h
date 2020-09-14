@@ -8,8 +8,7 @@
  * 
  */
 
-#ifndef REFRESH_H
-#define REFRESH_H
+#pragma once
 
 #include "lvgl.h"
 
@@ -21,6 +20,5 @@ lv_obj_t *tk_top_bar;
  * 
  * @param task Declared because lvgl tasks need this.
  */
-void tk_top_bar_refresher_task(lv_task_t *task);
+void refresher_task(lv_task_t *task);
 
-#endif

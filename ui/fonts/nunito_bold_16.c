@@ -8911,5 +8911,5 @@ lv_font_t nunito_bold_16 = {
     .dsc = &font_dsc           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
 };
 
-#endif /*#if NUNITO_BOLD_16*/
+ #endif /*#if NUNITO_BOLD_16*/
 
