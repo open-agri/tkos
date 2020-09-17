@@ -9,6 +9,8 @@
  */
 
 #include "ui/views.h"
+#include "ui/menu/menu.h"
+#include "model/datastore.h"
 #include "esp_log.h"
 
 #include <stdio.h>
@@ -35,7 +37,7 @@ static void left_button_click_callback()
  */
 static void right_button_click_callback()
 {
-  // TODO: If button toggle without entering edit mode.
+  // TODO: If switch toggle without entering edit mode.
   // lv_obj_get_type...
   ESP_LOGI(TAG, "Right button pressed.");
   if (lv_group_get_editing(group))
@@ -70,23 +72,27 @@ tk_view_t build_brightness_view()
   lv_obj_t *view_content = lv_cont_create(NULL, NULL);
   lv_obj_add_style(view_content, LV_CONT_PART_MAIN, &tk_style_far_background);
 
+  lv_obj_t *menu_container = lv_cont_create(view_content, NULL);
+  lv_obj_add_style(menu_container, LV_CONT_PART_MAIN, &tk_style_far_background);
+  lv_obj_set_size(menu_container, 480, 320 - 2 * 36);
+  lv_obj_align(menu_container, NULL, LV_ALIGN_CENTER, 0, 0);
+
   // Group (for encoder)
   group = lv_group_create();
 
-  // Slider
-  lv_obj_t *slider = lv_slider_create(view_content, NULL);
-  lv_obj_align(slider, view_content, LV_ALIGN_CENTER, 0, 0);
-  lv_group_add_obj(group, slider);
+  // Menu
+  static tk_menu_item_t menu_items[] = {
+      (tk_menu_item_t){.type = TK_MENU_ITEM_SWITCH, .desc = "Automatic brightness", .binding_type = TK_MENU_BINDING_INT, .binding = &(global_datastore.brightness_settings.automatic)},
+      (tk_menu_item_t){.type = TK_MENU_ITEM_SLIDER, .desc = "Brightness", .binding_type = TK_MENU_BINDING_DOUBLE, .binding_min = 0, .binding_max = 1, .binding_steps = 32, .binding = &(global_datastore.brightness_settings.level)}};
 
-  // Switch
-  lv_obj_t *auto_switch = lv_switch_create(view_content, NULL);
-  lv_obj_align(auto_switch, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
-  lv_group_add_obj(group, auto_switch);
+  static tk_menu_t menu_conf = {
+      .items_count = 2,
+      .items = menu_items};
+
+  lv_obj_t *menu = tk_menu_create(menu_container, group, &menu_conf);
 
   // Group
   lv_indev_set_group(encoder_indev, group);
-  // lv_group_focus_obj(slider);
-  // lv_group_set_editing(group, true);
 
   // Bottom bar configuration
   tk_bottom_bar_button_t right = {
@@ -107,7 +113,7 @@ tk_view_t build_brightness_view()
   // Return struct
   tk_view_t main_view = {
       .content = view_content,
-      .bottom_bar_configuration = bb_conf, 
+      .bottom_bar_configuration = bb_conf,
       .top_bar_configuration = tb_conf};
 
   ESP_LOGD(TAG, "View built successfully.");

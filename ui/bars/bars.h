@@ -23,7 +23,7 @@ typedef struct
 {
     char *text;
     tk_void_callback click_callback;
-} tk_menu_item_t;
+} tk_bar_menu_item_t;
 
 /**
  * @brief Represents a bar button and its set of menu items.
@@ -34,7 +34,7 @@ typedef struct
     char *text;
     tk_void_callback click_callback;
     int items_count;
-    tk_menu_item_t menu[10];
+    tk_bar_menu_item_t menu[10];
 } tk_bottom_bar_button_t;
 
 /**

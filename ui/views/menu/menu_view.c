@@ -64,8 +64,8 @@ tk_view_t build_menu_view()
   tk_bottom_bar_button_t right = {
       .text = "Menu",
       .click_callback = NULL,
-      .menu = {(tk_menu_item_t){.text = "First", .click_callback = NULL},
-               (tk_menu_item_t){.text = "Second", .click_callback = NULL}},
+      .menu = {(tk_bar_menu_item_t){.text = "First", .click_callback = NULL},
+               (tk_bar_menu_item_t){.text = "Second", .click_callback = NULL}},
       .items_count = 2};
 
   tk_bottom_bar_button_t left = {

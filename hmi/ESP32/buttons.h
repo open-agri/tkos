@@ -20,9 +20,9 @@
 #define HMI_BUTTON_ID_RIGHT 0
 
 // Debounce time
-#define HMI_BUTTON_DEB_US 15000
+#define HMI_BUTTON_DEB_US 50000
 // Delay of sampling after interrupt
-#define HMI_BUTTON_DEL_US 10000
+#define HMI_BUTTON_DEL_US 20000
 
 
 /**

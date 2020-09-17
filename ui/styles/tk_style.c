@@ -23,7 +23,7 @@
  */
 lv_color_t tk_get_primary_color(bool light)
 {
-    return light ? TK_COLOR_BLUE_LIGHT : TK_COLOR_BLUE_DARK;
+    return light ? TK_COLOR_ORANGE_LIGHT : TK_COLOR_ORANGE_DARK;
 }
 
 /**
@@ -33,7 +33,7 @@ lv_color_t tk_get_primary_color(bool light)
  */
 lv_color_t tk_get_secondary_color(bool light)
 {
-    return light ? TK_COLOR_GREEN_LIGHT : TK_COLOR_GREEN_DARK;
+    return light ? TK_COLOR_YELLOW_LIGHT : TK_COLOR_YELLOW_DARK;
 }
 
 /**
@@ -59,7 +59,7 @@ void tk_set_default_shadow(lv_style_t *style, int height, bool light)
  */
 lv_color_t tk_get_themed_bar_background_color(bool light)
 {
-    return light? LV_COLOR_MAKE(237, 237, 237) : LV_COLOR_MAKE(24, 24, 24);
+    return light ? LV_COLOR_MAKE(237, 237, 237) : LV_COLOR_MAKE(24, 24, 24);
 }
 
 /**
@@ -94,11 +94,11 @@ void tk_styles_init(bool light)
     // MENU BUTTON
     lv_style_init(&tk_style_menu_button);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_DEFAULT, LV_OPA_TRANSP);
-    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_100);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_PRESSED, LV_OPA_100);
-    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_EDITED, LV_OPA_100);
     lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_PRESSED, tk_get_primary_color(light));
     lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_FOCUSED, tk_get_primary_color(light));
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_50);
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_EDITED, LV_OPA_70);
     lv_style_set_radius(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_menu_button, LV_STATE_FOCUSED, 0);
@@ -127,6 +127,9 @@ void tk_styles_init(bool light)
     // BACKGROUND
     lv_style_init(&tk_style_far_background);
     lv_style_set_bg_color(&tk_style_far_background, LV_STATE_DEFAULT, tk_get_themed_far_background_color(light));
+    lv_style_set_pad_all(&tk_style_far_background, LV_STATE_DEFAULT, 0);
+    lv_style_set_radius(&tk_style_far_background, LV_STATE_DEFAULT, 0);
+    lv_style_set_border_opa(&tk_style_far_background, LV_STATE_DEFAULT, LV_OPA_0);
 
     // BARS
     lv_style_init(&tk_style_bar);
@@ -155,6 +158,12 @@ void tk_styles_init(bool light)
     lv_style_init(&tk_style_no_background_borders);
     lv_style_set_bg_opa(&tk_style_no_background_borders, LV_STATE_DEFAULT, LV_OPA_0);
     lv_style_set_border_width(&tk_style_no_background_borders, LV_STATE_DEFAULT, 0);
+
+    // WHITE BORDER
+    lv_style_init(&tk_style_outlined);
+    lv_style_set_outline_opa(&tk_style_outlined, LV_STATE_DEFAULT, LV_OPA_100);
+    lv_style_set_outline_color(&tk_style_outlined, LV_STATE_DEFAULT, light ? LV_COLOR_WHITE : lv_color_hex(0x31404f));
+    lv_style_set_outline_width(&tk_style_outlined, LV_STATE_DEFAULT, 2);
 
     ESP_LOGI(TAG, "Generated styles for %s mode.", light ? "light" : "dark");
 }

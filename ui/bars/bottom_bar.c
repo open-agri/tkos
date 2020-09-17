@@ -36,6 +36,7 @@ tk_bottom_bar_configuration_t original_configuration;
 
 bool menu_open;
 bool menu_flag;
+bool click_passthrough_flag;
 
 lv_obj_t *menu;
 lv_group_t *menu_group;
@@ -136,7 +137,7 @@ void show_menu(tk_bottom_bar_configuration_t current_bb_conf, bool left)
     group_bak = encoder_indev->group;
 
     unsigned int items = left ? current_bb_conf.left_button.items_count : current_bb_conf.right_button.items_count;
-    tk_menu_item_t *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
+    tk_bar_menu_item_t *menu_items = left ? current_bb_conf.left_button.menu : current_bb_conf.right_button.menu;
 
     ESP_LOGI(TAG, "Building %s menu with %d items.", left ? "left" : "right", items);
 
@@ -234,6 +235,11 @@ static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
             // Using a flag in order to delay the appearance of the menu on button release
             menu_flag = true;
         }
+
+        // Regular click
+        if (original_configuration.left_button.items_count == 0)
+            click_passthrough_flag = true;
+
         break;
 
     case LV_EVENT_RELEASED:
@@ -243,6 +249,14 @@ static void left_button_event_callback(lv_obj_t *obj, lv_event_t event)
         // No continued pressure
         lv_obj_set_state(obj, LV_STATE_DEFAULT);
 
+        // Send short click to this button
+        if (click_passthrough_flag)
+        {
+            click_passthrough_flag = false;
+            lv_event_send(obj, LV_EVENT_SHORT_CLICKED, NULL);
+        }
+
+        // Show menu
         if (menu_flag)
         {
             ESP_LOGD(TAG, "Triggering menu opening.");
@@ -316,6 +330,11 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
             // Using a flag in order to delay the appearance of the menu on button release
             menu_flag = true;
         }
+
+        // Regular click
+        if (original_configuration.right_button.items_count == 0)
+            click_passthrough_flag = true;
+
         break;
 
     case LV_EVENT_RELEASED:
@@ -325,6 +344,14 @@ static void right_button_event_callback(lv_obj_t *obj, lv_event_t event)
         // No continued pressure
         lv_obj_set_state(obj, LV_STATE_DEFAULT);
 
+        // Send short click to this button
+        if (click_passthrough_flag)
+        {
+            click_passthrough_flag = false;
+            lv_event_send(obj, LV_EVENT_SHORT_CLICKED, NULL);
+        }
+
+        // Show menu
         if (menu_flag)
         {
             ESP_LOGD(TAG, "Triggering menu opening.");
@@ -372,7 +399,6 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
         lv_obj_set_event_cb(left_button_label, refresh_cb);
     }
 
-
     // Center label
     center_label = lv_label_create(bar, NULL);
     lv_label_set_text(center_label, "");
@@ -395,7 +421,6 @@ lv_obj_t *build_bottom_bar(tk_bottom_bar_configuration_t configuration, bool ori
         // Refresh
         lv_obj_set_event_cb(right_button_label, refresh_cb);
     }
-
 
     // Save configuration
     if (original)

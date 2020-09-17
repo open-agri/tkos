@@ -29,45 +29,6 @@ static tk_brightness_settings_t *settings_int;
 static bool dark_theme = true;
 
 /**
- * @brief Sets whether the brightness should vary based on current brightness.
- * 
- * @param is_auto Sets the automatic mode to on or off.
- */
-void hmi_brightness_set_auto(bool is_auto)
-{
-}
-
-/**
- * @brief Sets the desired brightness level and switches to manual mode.
- * 
- * @param value Brightness value (0-1).
- */
-void hmi_brightness_set_value(double value)
-{
-}
-
-/**
- * @brief Gets the current automatic contfiguration.
- * 
- * @return true Automatic mode.
- * @return false Manual mode.
- */
-bool hmi_brightness_get_auto(void)
-{
-    return settings_int->automatic;
-}
-
-/**
- * @brief Gets the current brightness value, even in automatic mode.
- * 
- * @return unsigned short int The display brightness (0-1).
- */
-double hmi_brightness_get_value(void)
-{
-    return settings_int->level;
-}
-
-/**
  * @brief Writes the brightness value to the backlight.
  * 
  * @param value Brightness value (0-1).
@@ -84,10 +45,7 @@ void brightness_write(double value)
     // Get duty cycle
     unsigned int duty_cycle = BRIGHTNESS_MIN + (value * (double)(BRIGHTNESS_MAX - BRIGHTNESS_MIN));
 
-    ESP_LOGI(TAG, "Screen backlight brightness set to duty cycle %d.", duty_cycle);
-
-    ESP_ERROR_CHECK(ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, duty_cycle));
-    ESP_ERROR_CHECK(ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel));
+    ESP_ERROR_CHECK(ledc_set_fade_time_and_start(ledc_channel.speed_mode, ledc_channel.channel, duty_cycle, 100, LEDC_FADE_NO_WAIT));
 }
 
 /**
@@ -113,18 +71,31 @@ void hmi_brightness_init(tk_brightness_settings_t *settings)
     ledc_channel = (ledc_channel_config_t){
         .channel = LEDC_CHANNEL_0,
         // Default duty to max for diagnostic reasons
-        .duty = BRIGHTNESS_MAX,
+        .duty = 0,
         .gpio_num = BRIGHTNESS_PIN,
         .speed_mode = ledc_timer.speed_mode,
         .hpoint = 0,
         .timer_sel = ledc_timer.timer_num};
 
     ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+    ESP_ERROR_CHECK(ledc_fade_func_install(0));
+
+    // Set up LDR switcher
+    gpio_config_t switcher_gpio = {
+        .mode = GPIO_MODE_OUTPUT_OD,
+        .intr_type = GPIO_INTR_DISABLE,
+        .pin_bit_mask = GPIO_SEL_32};
+
+    ESP_ERROR_CHECK(gpio_config(&switcher_gpio));
+
+    // Disable LDR
+    ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_32, 0));
 
     // Set up ADC1
     ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_12Bit));
-    ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_0db));
+    ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_GPIO32_CHANNEL, ADC_ATTEN_11db));
 
+    brightness_write(1);//settings_int->level);
     switch_theme(false);
 
     ESP_LOGI(TAG, "Brightness system initialized.");
@@ -171,9 +142,6 @@ void switch_theme(bool light)
 
     // Generate styles
     tk_styles_init(light);
-
-    // Redraw screen
-    // view_navigate(view_stack_last->generator, false);
 }
 
 /**
@@ -182,12 +150,18 @@ void switch_theme(bool light)
  */
 void brightness_task(lv_task_t *task)
 {
-    if (true || settings_int->automatic)
+    if (settings_int->automatic)
     {
 
+        // Turn on sensor
+        // ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_32, 1));
+
         // Get data from sensor
-        int reading = adc1_get_raw(ADC1_CHANNEL_0);
-        ESP_LOGI(TAG, "Light sensor raw is %d.", reading);
+        int reading = adc1_get_raw(ADC1_GPIO32_CHANNEL);
+
+        // Turn off sensor
+
+        // Process reading
         if (reading > LIGHT_DARK)
             reading = LIGHT_DARK;
         if (reading < LIGHT_BRIGHT)
@@ -197,25 +171,26 @@ void brightness_task(lv_task_t *task)
 
         // Update struct
         settings_int->level = exp_roll_avg(settings_int->level, environment_light);
+        ESP_LOGW(TAG, "Reading = %d. Relative brightness = %.4f, average %.4f.", reading, environment_light, settings_int->level);
 
         // Set display to correct value
         brightness_write(settings_int->level);
     }
     else
     {
-        // TODO: Update value to what is stored in settings
+        // Update value to what is stored in settings
+        brightness_write(settings_int->level);
     }
 
     // Update theme (with hysteresis)
-    ESP_LOGE(TAG, "level = %f, dark = %d", settings_int->level, dark_theme);
     if (settings_int->level > THEME_THRESHOLD_HIGH && dark_theme)
     {
-        ESP_LOGW(TAG, "Switching to light.");
+        ESP_LOGI(TAG, "Switching to light.");
         switch_theme(true);
     }
     else if (settings_int->level < THEME_THRESHOLD_LOW && !dark_theme)
     {
-        ESP_LOGW(TAG, "Switching to dark.");
+        ESP_LOGI(TAG, "Switching to dark.");
         switch_theme(false);
     }
 }
