@@ -83,7 +83,7 @@ tk_view_t build_brightness_view()
   // Menu
   static tk_menu_item_t menu_items[] = {
       (tk_menu_item_t){.type = TK_MENU_ITEM_SWITCH, .desc = "Automatic brightness", .binding_type = TK_MENU_BINDING_INT, .binding = &(global_datastore.brightness_settings.automatic)},
-      (tk_menu_item_t){.type = TK_MENU_ITEM_SLIDER, .desc = "Brightness", .binding_type = TK_MENU_BINDING_DOUBLE, .binding_min = 0, .binding_max = 1, .binding_steps = 32, .binding = &(global_datastore.brightness_settings.level)}};
+      (tk_menu_item_t){.type = TK_MENU_ITEM_SLIDER, .desc = "Brightness", .binding_type = TK_MENU_BINDING_DOUBLE, .binding_min = 0, .binding_max = 1, .binding_steps = 400, .binding = &(global_datastore.brightness_settings.level)}};
 
   static tk_menu_t menu_conf = {
       .items_count = 2,

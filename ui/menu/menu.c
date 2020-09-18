@@ -22,7 +22,7 @@ lv_obj_t *menu_widget;
 LV_EVENT_CB_DECLARE(item_base_event_cb)
 {
     // Key
-    if (e == LV_EVENT_KEY)
+    if (false) //e == LV_EVENT_KEY)
     {
         // Exit with no user data
         if (obj->user_data == NULL)
@@ -33,13 +33,11 @@ LV_EVENT_CB_DECLARE(item_base_event_cb)
         // If object is base and a control exists, send the key to the control
         if (obj == item.base && item.control != NULL)
         {
-            lv_obj_set_state(item.control, LV_STATE_EDITED);
             lv_event_send(item.control, LV_EVENT_KEY, lv_event_get_data());
-            lv_obj_set_state(item.control, LV_STATE_DEFAULT);
         }
     }
-    // Focus (toggle)
-    else if (e == LV_EVENT_FOCUSED)
+    // Focus/defocus
+    else if (e == LV_EVENT_FOCUSED || e == LV_EVENT_DEFOCUSED)
     {
         if (obj->user_data == NULL)
             return;
@@ -47,11 +45,34 @@ LV_EVENT_CB_DECLARE(item_base_event_cb)
         tk_menu_item_t item = *(tk_menu_item_t *)obj->user_data;
         tk_menu_t menu = *(tk_menu_t *)menu_widget->user_data;
 
-        // Toggle switch
-        if (item.type == TK_MENU_ITEM_SWITCH && item.control != NULL && lv_group_get_editing(menu.group))
+        if (item.control != NULL)
         {
-            lv_group_set_editing(menu.group, false);
-            lv_event_send(item.control, LV_EVENT_VALUE_CHANGED, NULL);
+            switch (item.type)
+            {
+            case TK_MENU_ITEM_SWITCH:
+                // Toggle switch
+                if (lv_group_get_editing(menu.group) && e == LV_EVENT_FOCUSED)
+                {
+                    lv_group_set_editing(menu.group, false);
+                    lv_event_send(item.control, LV_EVENT_VALUE_CHANGED, NULL);
+                }
+                break;
+            case TK_MENU_ITEM_SLIDER:
+                // Focus/defocus slider
+                if(e == LV_EVENT_FOCUSED) {
+                    lv_group_add_obj(menu.group, item.control);
+                    lv_group_focus_obj(item.control);
+                } else {
+                    lv_group_focus_obj(item.base);
+                    lv_group_remove_obj(item.control);
+                }
+
+                // item.control->signal_cb(item.control, e == LV_EVENT_FOCUSED ? LV_SIGNAL_FOCUS : LV_SIGNAL_DEFOCUS, NULL);
+                // lv_event_send(item.control, e, NULL);
+                break;
+            default:
+                break;
+            }
         }
     }
 }
@@ -77,6 +98,30 @@ LV_EVENT_CB_DECLARE(item_control_event_cb)
         case TK_MENU_ITEM_SWITCH:
             *(int *)item->binding ? lv_switch_on(item->control, LV_ANIM_ON) : lv_switch_off(item->control, LV_ANIM_ON);
             break;
+        case TK_MENU_ITEM_SLIDER:
+
+            ;
+
+            double perc = 0;
+            switch (item->binding_type)
+            {
+            case TK_MENU_BINDING_INT:
+                perc = (double)*(int *)item->binding;
+                break;
+            case TK_MENU_BINDING_UINT:
+                perc = (double)*(unsigned int *)item->binding;
+                break;
+            case TK_MENU_BINDING_DOUBLE:
+                perc = *(double *)item->binding;
+                break;
+            }
+
+            perc -= item->binding_min;
+            perc /= item->binding_max - item->binding_min;
+
+            int val = (int)(perc * item->binding_steps);
+            lv_slider_set_range(item->control, 0, item->binding_steps);
+            lv_slider_set_value(item->control, val, LV_ANIM_ON);
         default:
             break;
         }
@@ -84,12 +129,15 @@ LV_EVENT_CB_DECLARE(item_control_event_cb)
     // Value change
     else if (e == LV_EVENT_VALUE_CHANGED)
     {
-        ESP_LOGI(TAG, "%s item value changed.", item->desc);
         switch (item->type)
         {
         case TK_MENU_ITEM_SWITCH:
             (*(bool *)item->binding) = !(*(bool *)item->binding);
             ESP_LOGI(TAG, "%s switch binding set to %d.", item->desc, *(int *)item->binding);
+            break;
+        case TK_MENU_ITEM_SLIDER:
+            //*(int *)item->binding = *(int *)lv_event_get_data();
+            ESP_LOGI(TAG, "%s slider binding set to %d (raw).", item->desc, *(int *)lv_event_get_data());
             break;
         default:
             break;
@@ -110,6 +158,7 @@ void group_focus_cb(lv_group_t *g)
 lv_obj_t *tk_menu_create(lv_obj_t *parent, lv_group_t *group, tk_menu_t *menu)
 {
     menu->group = group;
+    lv_group_set_wrap(group, false);
 
     // Automatic scroll
     lv_group_set_focus_cb(group, group_focus_cb);
@@ -162,6 +211,7 @@ lv_obj_t *tk_menu_create(lv_obj_t *parent, lv_group_t *group, tk_menu_t *menu)
         case TK_MENU_ITEM_SLIDER:
             current_item->control = lv_slider_create(current_item->base, NULL);
             lv_obj_set_user_data(current_item->control, current_item);
+            lv_obj_set_event_cb(current_item->control, item_control_event_cb);
 
             break;
         case TK_MENU_ITEM_BUTTON:

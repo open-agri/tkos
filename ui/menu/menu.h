@@ -59,13 +59,13 @@ typedef struct
      * @brief The minimum value.
      * 
      */
-    int binding_min;
+    double binding_min;
 
     /**
      * @brief The maximum value.
      * 
      */
-    int binding_max;
+    double binding_max;
 
     /**
      * @brief The number of steps in a slider.
