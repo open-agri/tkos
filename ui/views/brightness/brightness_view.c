@@ -17,9 +17,26 @@
 
 #define TAG "Brightness view"
 
-lv_group_t *group;
-char lb_string[30];
+static lv_group_t *group;
+static char lb_string[30];
 char rb_string[30];
+
+TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb);
+
+static tk_menu_item_t auto_brightness_switch = {.type = TK_MENU_ITEM_SWITCH, .desc = "Automatic brightness", .binding_type = TK_MENU_BINDING_INT, .binding = &(global_datastore.brightness_settings.automatic), .value_change_cb = auto_brightness_cb};
+static tk_menu_item_t brightness_slider = {.type = TK_MENU_ITEM_SLIDER, .desc = "Brightness", .binding_type = TK_MENU_BINDING_DOUBLE, .binding_min = 0, .binding_max = 1, .binding_steps = 400, .binding = &(global_datastore.brightness_settings.level)};
+
+static tk_menu_t menu_conf = {
+    .items_count = 2,
+    .items = {&auto_brightness_switch, &brightness_slider}};
+
+TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb)
+{
+  bool val = *(bool *)sender->binding;
+  ESP_LOGI(TAG, "Automatic setting changed to %d.", val);
+  brightness_slider.disabled = val;
+  brightness_slider.binding_steps = val ? 400 : 16;
+}
 
 /**
  * @brief The bottom bar's left button click callback.
@@ -81,14 +98,6 @@ tk_view_t build_brightness_view()
   group = lv_group_create();
 
   // Menu
-  static tk_menu_item_t menu_items[] = {
-      (tk_menu_item_t){.type = TK_MENU_ITEM_SWITCH, .desc = "Automatic brightness", .binding_type = TK_MENU_BINDING_INT, .binding = &(global_datastore.brightness_settings.automatic)},
-      (tk_menu_item_t){.type = TK_MENU_ITEM_SLIDER, .desc = "Brightness", .binding_type = TK_MENU_BINDING_DOUBLE, .binding_min = 0, .binding_max = 1, .binding_steps = 400, .binding = &(global_datastore.brightness_settings.level)}};
-
-  static tk_menu_t menu_conf = {
-      .items_count = 2,
-      .items = menu_items};
-
   lv_obj_t *menu = tk_menu_create(menu_container, group, &menu_conf);
 
   // Group

@@ -94,18 +94,24 @@ void tk_styles_init(bool light)
     // MENU BUTTON
     lv_style_init(&tk_style_menu_button);
     lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_DEFAULT, LV_OPA_TRANSP);
-    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_PRESSED, LV_OPA_100);
-    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_PRESSED, tk_get_primary_color(light));
-    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_FOCUSED, tk_get_primary_color(light));
-    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_50);
-    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_EDITED, LV_OPA_70);
     lv_style_set_radius(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
     lv_style_set_border_width(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
-    lv_style_set_border_width(&tk_style_menu_button, LV_STATE_FOCUSED, 0);
     lv_style_set_outline_width(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
-    lv_style_set_outline_width(&tk_style_menu_button, LV_STATE_FOCUSED, 0);
     lv_style_set_margin_left(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
     lv_style_set_margin_right(&tk_style_menu_button, LV_STATE_DEFAULT, 0);
+
+    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_FOCUSED, tk_get_primary_color(light));
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_FOCUSED, LV_OPA_50);
+    lv_style_set_border_width(&tk_style_menu_button, LV_STATE_FOCUSED, 0);
+    lv_style_set_outline_width(&tk_style_menu_button, LV_STATE_FOCUSED, 0);
+
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_PRESSED, LV_OPA_100);
+    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_PRESSED, tk_get_primary_color(light));
+
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_EDITED, LV_OPA_70);
+
+    lv_style_set_bg_color(&tk_style_menu_button, LV_STATE_DISABLED | LV_STATE_FOCUSED, tk_get_themed_bar_background_color(light));
+    lv_style_set_bg_opa(&tk_style_menu_button, LV_STATE_DISABLED | LV_STATE_FOCUSED, LV_OPA_80);
 
     // MENU
     lv_style_init(&tk_style_menu);
@@ -160,10 +166,14 @@ void tk_styles_init(bool light)
     lv_style_set_border_width(&tk_style_no_background_borders, LV_STATE_DEFAULT, 0);
 
     // WHITE BORDER
-    lv_style_init(&tk_style_outlined);
-    lv_style_set_outline_opa(&tk_style_outlined, LV_STATE_DEFAULT, LV_OPA_100);
-    lv_style_set_outline_color(&tk_style_outlined, LV_STATE_DEFAULT, light ? LV_COLOR_WHITE : lv_color_hex(0x31404f));
-    lv_style_set_outline_width(&tk_style_outlined, LV_STATE_DEFAULT, 2);
+    lv_style_init(&tk_style_no_outline);
+    lv_style_set_outline_opa(&tk_style_no_outline, LV_STATE_DEFAULT | LV_STATE_FOCUSED, LV_OPA_0);
+
+    // INVISIBLE WHEN DISABLED
+    lv_style_init(&tk_style_invisible_when_disabled);
+    lv_style_set_bg_opa(&tk_style_invisible_when_disabled, LV_STATE_DISABLED, LV_OPA_0);
+    lv_style_set_shadow_opa(&tk_style_invisible_when_disabled, LV_STATE_DEFAULT, LV_OPA_0);
+
 
     ESP_LOGI(TAG, "Generated styles for %s mode.", light ? "light" : "dark");
 }

@@ -19,11 +19,11 @@
 #define TAG "Main view"
 
 // Updatable widgets:
-lv_obj_t *arc_l;
-lv_obj_t *arc_l_big_label;
-lv_obj_t *arc_l_small_label;
-lv_obj_t *arc_r;
-lv_obj_t *arc_r_big_label;
+static lv_obj_t *arc_l;
+static lv_obj_t *arc_l_big_label;
+static lv_obj_t *arc_l_small_label;
+static lv_obj_t *arc_r;
+static lv_obj_t *arc_r_big_label;
 
 // TODO: Move to array.
 // TODO: Check defaults coherency in callback and in generator code.
@@ -64,7 +64,6 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
     if (global_datastore.engine_data.rpm_available)
     {
       ESP_LOGD(TAG, "Received a refresh event for right arc, value is %.2f RPM.", global_datastore.engine_data.rpm);
-      lv_arc_set_range(obj, 0, 5000);
       lv_arc_set_value(obj, (int)global_datastore.engine_data.rpm);
     }
     else
@@ -142,6 +141,8 @@ tk_view_t build_main_view()
   arc_l = lv_arc_create(dashboard_container, NULL);
   lv_obj_add_style(arc_l, LV_CONT_PART_MAIN, &tk_style_no_background_borders);
   lv_arc_set_bg_angles(arc_l, 60, 300);
+  lv_arc_set_angles(arc_l, 60, 300);
+  lv_arc_set_range(arc_l, 0, 1000);   // km/h * 10
   lv_arc_set_rotation(arc_l, 90);
   lv_arc_set_value(arc_l, 0);
   lv_obj_set_size(arc_l, 160, 160);
@@ -169,10 +170,15 @@ tk_view_t build_main_view()
   lv_obj_set_event_cb(arc_l_small_label, refresh_cb);
 
   // Right arc
-  arc_r = lv_arc_create(dashboard_container, arc_l);
+  arc_r = lv_arc_create(dashboard_container, NULL);
+  lv_obj_add_style(arc_r, LV_CONT_PART_MAIN, &tk_style_no_background_borders);
+  lv_arc_set_bg_angles(arc_r, 60, 300);
+  lv_arc_set_angles(arc_r, 60, 300);
+  lv_arc_set_range(arc_r, 0, 2500);
   lv_arc_set_rotation(arc_r, 90);
   lv_arc_set_value(arc_r, 0);
   lv_obj_set_size(arc_r, 160, 160);
+  lv_obj_set_style_local_pad_all(arc_r, LV_ARC_PART_BG, LV_STATE_DEFAULT, 0);
   lv_obj_set_event_cb(arc_r, refresh_cb);
 
   // Container

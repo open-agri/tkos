@@ -64,6 +64,7 @@ lv_style_t tk_style_top_bar_icon;
 lv_style_t tk_style_top_bar_icon_warn;
 lv_style_t tk_style_top_bar_icon_error;
 lv_style_t tk_style_no_background_borders;
-lv_style_t tk_style_outlined;
+lv_style_t tk_style_no_outline;
+lv_style_t tk_style_invisible_when_disabled;
 
 

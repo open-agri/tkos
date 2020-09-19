@@ -31,7 +31,7 @@ int mem_free_last = 0;
 void refresher_task(lv_task_t *task)
 {
     // TODO: Remove fake data
-    global_datastore.engine_data.rpm = abs(global_datastore.engine_data.rpm + (rand() % 6 - 3));
+    global_datastore.engine_data.rpm = abs(global_datastore.engine_data.rpm + (rand() % 50 - 25));
     global_datastore.engine_data.rpm_available = true;
     ESP_LOGD(TAG, "[FAKE DATA] Setting engine RPM to %.2f", global_datastore.engine_data.rpm);
 
