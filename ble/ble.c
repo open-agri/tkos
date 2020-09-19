@@ -83,7 +83,8 @@ void ble_central_init() {
   sprintf(name, "TKC-%02X%02X%02X", mac[3], mac[4], mac[5]);
   ESP_LOGI(TAG, "Setting device Bluetooth name to \"%s\".", name);
 
-  if (!ble_svc_gap_device_name_set(name))
+  // 0 = success
+  if (ble_svc_gap_device_name_set(name))
     ESP_LOGE(TAG, "Unable to change device name.");
 
   // Store config

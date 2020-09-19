@@ -171,7 +171,7 @@ void brightness_task(lv_task_t *task)
 
         // Update struct
         settings_int->level = exp_roll_avg(settings_int->level, environment_light);
-        ESP_LOGW(TAG, "Reading = %d. Relative brightness = %.4f, average %.4f.", reading, environment_light, settings_int->level);
+        ESP_LOGD(TAG, "Reading = %d. Relative brightness = %.4f, average %.4f.", reading, environment_light, settings_int->level);
 
         // Set display to correct value
         brightness_write(settings_int->level);
