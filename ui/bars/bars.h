@@ -35,6 +35,7 @@ typedef struct
     tk_void_callback click_callback;
     int items_count;
     tk_bar_menu_item_t menu[10];
+    bool *disabled;
 } tk_bottom_bar_button_t;
 
 /**

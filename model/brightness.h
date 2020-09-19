@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 typedef struct {
     bool automatic;
     double level;

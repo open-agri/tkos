@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #include "model/brightness.h"
 #include "model/engine.h"
 #include "model/location.h"

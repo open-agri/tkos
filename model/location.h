@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 /**
  * @brief A struct for representing data related to the current location.
  * 

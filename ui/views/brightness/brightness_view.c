@@ -4,80 +4,108 @@
  * @brief The brightness view builder.
  * @version 0.1
  * @date 2020-09-10
- * 
- * 
+ *
+ *
  */
 
-#include "ui/views.h"
-#include "ui/menu/menu.h"
-#include "model/datastore.h"
 #include "esp_log.h"
+#include "model/datastore.h"
+#include "ui/menu/menu.h"
+#include "ui/views.h"
 
 #include <stdio.h>
 
 #define TAG "Brightness view"
 
 static lv_group_t *group;
+static tk_menu_item_t menu_current_item;
 static char lb_string[30];
-char rb_string[30];
+static char rb_string[30];
 
+static tk_bottom_bar_button_t right_bar_button;
+static tk_bottom_bar_button_t left_bar_button;
+static tk_bottom_bar_configuration_t bb_conf;
+static tk_top_bar_configuration_t tb_conf;
+
+// Callback declarations
 TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb);
+static void right_button_update(tk_menu_item_t *focused);
 
-static tk_menu_item_t auto_brightness_switch = {.type = TK_MENU_ITEM_SWITCH, .desc = "Automatic brightness", .binding_type = TK_MENU_BINDING_INT, .binding = &(global_datastore.brightness_settings.automatic), .value_change_cb = auto_brightness_cb};
-static tk_menu_item_t brightness_slider = {.type = TK_MENU_ITEM_SLIDER, .desc = "Brightness", .binding_type = TK_MENU_BINDING_DOUBLE, .binding_min = 0, .binding_max = 1, .binding_steps = 400, .binding = &(global_datastore.brightness_settings.level)};
+// Menu
+static tk_menu_item_t auto_brightness_switch = {
+    .type = TK_MENU_ITEM_SWITCH,
+    .desc = "Automatic brightness",
+    .button_string = "Toggle   " LV_SYMBOL_EDIT,
+    .editing_button_string = "Toggle   " LV_SYMBOL_EDIT,
+    .binding_type = TK_MENU_BINDING_INT,
+    .binding = &(global_datastore.brightness_settings.automatic),
+    .value_change_cb = auto_brightness_cb};
+
+static tk_menu_item_t brightness_slider = {
+    .type = TK_MENU_ITEM_SLIDER,
+    .desc = "Brightness",
+    .button_string = "Edit   " LV_SYMBOL_EDIT,
+    .editing_button_string = "Done   " LV_SYMBOL_OK,
+    .binding_type = TK_MENU_BINDING_DOUBLE,
+    .binding_min = 0,
+    .binding_max = 1,
+    .binding_steps = 400,
+    .binding = &(global_datastore.brightness_settings.level)};
 
 static tk_menu_t menu_conf = {
     .items_count = 2,
-    .items = {&auto_brightness_switch, &brightness_slider}};
+    .items = {&auto_brightness_switch, &brightness_slider},
+    .focus_change_cb = right_button_update};
 
-TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb)
-{
+// Callbacks
+TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb) {
   bool val = *(bool *)sender->binding;
   ESP_LOGI(TAG, "Automatic setting changed to %d.", val);
   brightness_slider.disabled = val;
   brightness_slider.binding_steps = val ? 400 : 16;
 }
 
-/**
- * @brief The bottom bar's left button click callback.
- * 
- */
-static void left_button_click_callback()
-{
-  ESP_LOGI(TAG, "Left button pressed.");
-  view_navigate_back();
-}
+static void right_button_update(tk_menu_item_t *focused) {
+  // Update current item if passed
+  if (focused != NULL)
+    menu_current_item = *focused;
 
-/**
- * @brief The bottom bar's right button click callback.
- * 
- */
-static void right_button_click_callback()
-{
-  // TODO: If switch toggle without entering edit mode.
-  // lv_obj_get_type...
-  ESP_LOGI(TAG, "Right button pressed.");
-  if (lv_group_get_editing(group))
-  {
-    lv_group_set_editing(group, false);
-    strcpy(rb_string, "Edit   " LV_SYMBOL_EDIT);
-  }
-  else
-  {
-    lv_group_set_editing(group, true);
-    strcpy(rb_string, "Confirm   " LV_SYMBOL_OK);
+  // Otherwise toggle editing
+  if (lv_group_get_editing(group)) {
+    strcpy(rb_string, menu_current_item.editing_button_string);
+  } else {
+    strcpy(rb_string, menu_current_item.button_string);
   }
 
   lv_event_send_refresh_recursive(lv_scr_act());
 }
 
 /**
+ * @brief The bottom bar's left button click callback.
+ *
+ */
+static void left_button_click_callback() {
+  ESP_LOGI(TAG, "Left button pressed.");
+  view_navigate_back();
+}
+
+/**
+ * @brief The bottom bar's right button click callback.
+ *
+ */
+static void right_button_click_callback() {
+  ESP_LOGI(TAG, "Right button pressed.");
+  // Toggle editing
+  lv_group_set_editing(group, !lv_group_get_editing(group));
+  right_button_update(NULL);
+}
+
+/**
  * @brief The brightness view generator.
- * 
+ *
  * @return tk_view_t The generated view.
  */
-tk_view_t build_brightness_view()
-{
+tk_view_t build_brightness_view() {
 
   ESP_LOGI(TAG, "Building view.");
 
@@ -103,27 +131,27 @@ tk_view_t build_brightness_view()
   // Group
   lv_indev_set_group(encoder_indev, group);
 
+  // Prevent crash when current current item was never set
+  menu_current_item = *tk_menu_get_current_item(group);
+
   // Bottom bar configuration
-  tk_bottom_bar_button_t right = {
-      .text = rb_string,
-      .click_callback = right_button_click_callback};
+  right_bar_button = (tk_bottom_bar_button_t){
+      .text = rb_string, .click_callback = right_button_click_callback};
+  right_bar_button.disabled = &(menu_current_item.disabled); // Yeah
 
-  tk_bottom_bar_button_t left = {
-      .text = lb_string,
-      .click_callback = left_button_click_callback};
+  left_bar_button = (tk_bottom_bar_button_t){
+      .text = lb_string, .click_callback = left_button_click_callback};
 
-  tk_bottom_bar_configuration_t bb_conf = {
-      .right_button = right,
-      .left_button = left};
+  static tk_bottom_bar_configuration_t bb_conf;
+  bb_conf.right_button = right_bar_button;
+  bb_conf.left_button = left_bar_button;
 
-  tk_top_bar_configuration_t tb_conf = {
-      .title = "Brightness"};
+  tb_conf.title = "Brightness";
 
   // Return struct
-  tk_view_t main_view = {
-      .content = view_content,
-      .bottom_bar_configuration = bb_conf,
-      .top_bar_configuration = tb_conf};
+  tk_view_t main_view = {.content = view_content,
+                         .bottom_bar_configuration = bb_conf,
+                         .top_bar_configuration = tb_conf};
 
   ESP_LOGD(TAG, "View built successfully.");
 

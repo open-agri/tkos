@@ -61,20 +61,20 @@ tk_view_t build_menu_view()
   }
 
   // Bottom bar configuration
-  tk_bottom_bar_button_t right = {
+  tk_bottom_bar_button_t right_bar_button = {
       .text = "Menu",
       .click_callback = NULL,
       .menu = {(tk_bar_menu_item_t){.text = "First", .click_callback = NULL},
                (tk_bar_menu_item_t){.text = "Second", .click_callback = NULL}},
       .items_count = 2};
 
-  tk_bottom_bar_button_t left = {
+  tk_bottom_bar_button_t left_bar_button = {
       .text = LV_SYMBOL_LEFT "   Back",
       .click_callback = left_button_click_callback};
 
   tk_bottom_bar_configuration_t bb_conf = {
-      .right_button = right,
-      .left_button = left};
+      .right_button = right_bar_button,
+      .left_button = left_bar_button};
 
   tk_top_bar_configuration_t tb_conf = {
       .title = "Menu"};
