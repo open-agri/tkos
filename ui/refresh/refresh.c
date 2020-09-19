@@ -33,14 +33,13 @@ void refresher_task(lv_task_t *task)
     // TODO: Remove fake data
     global_datastore.engine_data.rpm = abs(global_datastore.engine_data.rpm + (rand() % 50 - 25));
     global_datastore.engine_data.rpm_available = true;
-    ESP_LOGD(TAG, "[FAKE DATA] Setting engine RPM to %.2f", global_datastore.engine_data.rpm);
 
     // Refresh screen
     lv_event_send_refresh_recursive(NULL);
 
-    if (xPortGetFreeHeapSize() != mem_free_last)
+    if (esp_get_free_heap_size() != mem_free_last)
     {
-        mem_free_last = xPortGetFreeHeapSize();
-        ESP_LOGI(TAG, "Mem free: %d", xPortGetFreeHeapSize());
+        mem_free_last = esp_get_free_heap_size();
+        ESP_LOGI(TAG, "Mem free: %d", mem_free_last);
     }
 }
