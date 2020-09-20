@@ -153,7 +153,7 @@ void brightness_task(lv_task_t *task)
     if (settings_int->automatic)
     {
 
-        // Turn on sensor
+        // Turn on sensor (in case of overheating)
         // ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_32, 1));
 
         // Get data from sensor

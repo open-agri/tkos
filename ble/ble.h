@@ -13,4 +13,4 @@ typedef struct {
 
 } ble_device;
 
-void ble_central_init();
+void tk_ble_central_init();

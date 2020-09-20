@@ -11,14 +11,14 @@
 #include "esp_err.h"
 #include "esp_log.h"
 #include "esp_system.h"
+#include "esp_bt.h"
 
 #include "ble.h"
+#include "gap/gap.h"
 
 #include "esp_nimble_hci.h"
-#include "host/ble_hs.h"
 #include "nimble/nimble_port.h"
 #include "nimble/nimble_port_freertos.h"
-#include "services/gap/ble_svc_gap.h"
 
 #define TAG "BLE"
 
@@ -27,7 +27,7 @@
  *
  * @param param
  */
-void ble_central_task(void *param) {
+void tk_ble_central_task(void *param) {
   ESP_LOGI(TAG, "BLE Host Task Started");
   // This function will return only when nimble_port_stop() is executed
   nimble_port_run();
@@ -40,8 +40,13 @@ void ble_central_task(void *param) {
  * be used.
  *
  */
-void ble_central_sync_cb(void) {
+void tk_ble_central_sync_cb(void) {
   ESP_LOGI(TAG, "Host and controller in sync.");
+
+  // Start advertising
+  if(tk_ble_gap_start_advertising()) {
+    ESP_LOGE(TAG, "Device won't be discoverable. GAP is not advertising.");
+  }
 }
 
 /**
@@ -50,11 +55,11 @@ void ble_central_sync_cb(void) {
  *
  * @param reason
  */
-void ble_central_reset_cb(int reason) {
+void tk_ble_central_reset_cb(int reason) {
   ESP_LOGE(TAG, "Host was reset, reason %d.", reason);
 }
 
-void ble_central_init() {
+void tk_ble_central_init() {
   ESP_LOGI(TAG, "Initializing BLE central. Free memory: %d.",
            esp_get_free_heap_size());
 
@@ -68,12 +73,15 @@ void ble_central_init() {
     return;
   }
 
+  // ESP_LOGI(TAG, "Setting default TX power for advertising to +9dBm");
+  // ESP_ERROR_CHECK(esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, ESP_PWR_LVL_P9));
+
   ESP_LOGI(TAG, "Initializing NimBLE.");
   nimble_port_init();
 
   // Host configuration
-  ble_hs_cfg.reset_cb = ble_central_reset_cb;
-  ble_hs_cfg.sync_cb = ble_central_sync_cb;
+  ble_hs_cfg.reset_cb = tk_ble_central_reset_cb;
+  ble_hs_cfg.sync_cb = tk_ble_central_sync_cb;
 
   // Device name
   uint8_t mac[6];
@@ -90,5 +98,5 @@ void ble_central_init() {
   // Store config
   // ble_store_config_init();
 
-  nimble_port_freertos_init(ble_central_task);
+  nimble_port_freertos_init(tk_ble_central_task);
 }

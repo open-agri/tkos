@@ -21,7 +21,8 @@
 #include "model/warning.h"
 
 typedef struct {
-    bool bluetooth_connected;
+    // TODO: Create struct for bluetooth state
+    bool bluetooth_phone_connected;
     tk_brightness_settings_t brightness_settings;
     tk_engine_data_t engine_data;
     tk_location_data_t location_data;

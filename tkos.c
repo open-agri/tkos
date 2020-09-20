@@ -52,7 +52,7 @@ void tkos_init(void) {
   ESP_ERROR_CHECK(ret);
 
   // Drivers which require prior initialization
-  ble_central_init();
+  tk_ble_central_init();
   hmi_brightness_init(&(global_datastore.brightness_settings));
 
   // Tasks (BLE has a separate task on core 0)

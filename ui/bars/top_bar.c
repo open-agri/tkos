@@ -103,7 +103,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
     // Bluetooth icon
     else if (obj == bluetooth_icon)
     {
-        lv_label_set_text(bluetooth_icon, global_datastore.bluetooth_connected ? TK_ICON_BLUETOOTH : "");
+        lv_label_set_text(bluetooth_icon, global_datastore.bluetooth_phone_connected ? TK_ICON_BLUETOOTH : "");
         if (current_configuration.title == NULL)
             lv_obj_align(bluetooth_icon, bar, LV_ALIGN_IN_LEFT_MID, 8, 0);
         else
