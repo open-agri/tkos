@@ -24,8 +24,9 @@
 #include "hmi/ESP32/encoder.h"
 
 #include "model/datastore.h"
+#include "model/nvsettings.h"
 
-#include "ble/ble.h"
+#include "BLE/ble.h"
 
 #include "ui/refresh/refresh.h"
 #include "ui/styles/tk_style.h"
@@ -51,8 +52,12 @@ void tkos_init(void) {
   }
   ESP_ERROR_CHECK(ret);
 
+  // Settings
+  nv_init();
+  nv_load_apply_settings();
+
   // Drivers which require prior initialization
-  ble_central_init();
+  tk_ble_init();
   hmi_brightness_init(&(global_datastore.brightness_settings));
 
   // Tasks (BLE has a separate task on core 0)

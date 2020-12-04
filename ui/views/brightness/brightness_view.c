@@ -10,6 +10,7 @@
 
 #include "esp_log.h"
 #include "model/datastore.h"
+#include "model/nvsettings.h"
 #include "ui/menu/menu.h"
 #include "ui/views.h"
 
@@ -29,6 +30,7 @@ static tk_top_bar_configuration_t tb_conf;
 
 // Callback declarations
 TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb);
+TK_MENU_VALUE_CHANGE_CB_DECLARE(brightness_level_cb);
 static void right_button_update(tk_menu_item_t *focused);
 
 // Menu
@@ -50,7 +52,8 @@ static tk_menu_item_t brightness_slider = {
     .binding_min = 0,
     .binding_max = 1,
     .binding_steps = 400,
-    .binding = &(global_datastore.brightness_settings.level)};
+    .binding = &(global_datastore.brightness_settings.level),
+    .value_change_cb = brightness_level_cb};
 
 static tk_menu_t menu_conf = {
     .items_count = 2,
@@ -58,11 +61,20 @@ static tk_menu_t menu_conf = {
     .focus_change_cb = right_button_update};
 
 // Callbacks
+TK_MENU_VALUE_CHANGE_CB_DECLARE(brightness_level_cb) {
+  double val = *(double *)sender->binding;
+  ESP_LOGI(TAG, "Level setting changed to %.2f.", val);
+
+  nv_set_brightness_man_level(val);
+}
+
 TK_MENU_VALUE_CHANGE_CB_DECLARE(auto_brightness_cb) {
   bool val = *(bool *)sender->binding;
   ESP_LOGI(TAG, "Automatic setting changed to %d.", val);
   brightness_slider.disabled = val;
   brightness_slider.binding_steps = val ? 400 : 16;
+
+  nv_set_brightness_auto(val);
 }
 
 static void right_button_update(tk_menu_item_t *focused) {

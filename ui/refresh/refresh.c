@@ -30,9 +30,6 @@ int mem_free_last = 0;
  */
 void refresher_task(lv_task_t *task)
 {
-    // TODO: Remove fake data
-    global_datastore.engine_data.rpm = abs(global_datastore.engine_data.rpm + (rand() % 50 - 25));
-    global_datastore.engine_data.rpm_available = true;
 
     // Refresh screen
     lv_event_send_refresh_recursive(NULL);

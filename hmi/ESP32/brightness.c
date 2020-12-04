@@ -19,6 +19,7 @@
 #include "hmi/ESP32/brightness.h"
 #include "driver/ledc.h"
 #include "driver/adc.h"
+#include "soc/adc_channel.h"
 #include "esp_err.h"
 #include "esp_log.h"
 

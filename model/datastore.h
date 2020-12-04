@@ -19,6 +19,7 @@
 #include "model/units.h"
 #include "model/vehnet.h"
 #include "model/warning.h"
+#include "model/wifi_settings.h"
 
 typedef struct {
     bool bluetooth_connected;
@@ -30,6 +31,7 @@ typedef struct {
     tk_unit_settings_t unit_settings;
     tk_vehnet_status_t vehnet_status;
     tk_warning_level_t warning_level;
+    tk_wifi_settings_t wifi_settings;
 } tk_datastore_t;
 
 tk_datastore_t global_datastore;
