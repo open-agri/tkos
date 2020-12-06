@@ -50,27 +50,27 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
 
   switch (event->event_id) {
   case SYSTEM_EVENT_WIFI_READY:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_WIFI_READY\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_WIFI_READY\r");
     break;
   case SYSTEM_EVENT_SCAN_DONE:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_SCAN_DONE\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_SCAN_DONE\r");
     break;                     /**< ESP32 finish scanning AP */
   case SYSTEM_EVENT_STA_START: /**< ESP32 station start */
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_START\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_START\r");
     esp_wifi_connect();
     break;
 
   case SYSTEM_EVENT_STA_STOP:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_STOP\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_STOP\r");
     break; /**< ESP32 station stop */
   case SYSTEM_EVENT_STA_CONNECTED:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_CONNECTED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_CONNECTED\r");
     break;                            /**< ESP32 station connected to AP */
   case SYSTEM_EVENT_STA_DISCONNECTED: /**< ESP32 station disconnected from AP */
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_DISCONNECTED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_DISCONNECTED\r");
     esp_wifi_connect();
     xEventGroupClearBits(wifi_event_group, WIFI_STA_DISCONNECTED_BIT);
-    ESP_LOGI(TAG, "retry to connect to the AP\r\n");
+    ESP_LOGI(TAG, "retry to connect to the AP\r");
     /* Stop the web server */
     if (*server) {
       stop_OTA_webserver(*server);
@@ -79,10 +79,10 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
     break;
 
   case SYSTEM_EVENT_STA_AUTHMODE_CHANGE:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_AUTHMODE_CHANGE\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_AUTHMODE_CHANGE\r");
     break; /**< the auth mode of AP connected by ESP32 station changed */
   case SYSTEM_EVENT_STA_GOT_IP: /**< ESP32 station got IP from connected AP */
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_GOT_IP\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_GOT_IP\r");
     ESP_LOGI(TAG, "got ip:%s",
              ip4addr_ntoa(&event->event_info.got_ip.ip_info.ip));
     xEventGroupSetBits(wifi_event_group, WIFI_STA_CONNECTED_BIT);
@@ -93,29 +93,29 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
     break;
 
   case SYSTEM_EVENT_STA_LOST_IP:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_LOST_IP\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_LOST_IP\r");
     break; /**< ESP32 station lost IP and the IP is reset to 0 */
   case SYSTEM_EVENT_STA_WPS_ER_SUCCESS:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_SUCCESS\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_SUCCESS\r");
     break; /**< ESP32 station wps succeeds in enrollee mode */
   case SYSTEM_EVENT_STA_WPS_ER_FAILED:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_FAILED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_FAILED\r");
     break; /**< ESP32 station wps fails in enrollee mode */
   case SYSTEM_EVENT_STA_WPS_ER_TIMEOUT:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_TIMEOUT\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_TIMEOUT\r");
     break; /**< ESP32 station wps timeout in enrollee mode */
   case SYSTEM_EVENT_STA_WPS_ER_PIN:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_PIN\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_STA_WPS_ER_PIN\r");
     break; /**< ESP32 station wps pin code in enrollee mode */
   case SYSTEM_EVENT_AP_START:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_START\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_START\r");
     break; /**< ESP32 soft-AP start */
   case SYSTEM_EVENT_AP_STOP:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_STOP\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_STOP\r");
     break;                           /**< ESP32 soft-AP stop */
   case SYSTEM_EVENT_AP_STACONNECTED: /**< a station connected to ESP32 soft-AP
                                       */
-    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_STACONNECTED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_STACONNECTED\r");
 
     ESP_LOGI(TAG, "station:" MACSTR " join, AID=%d",
              MAC2STR(event->event_info.sta_connected.mac),
@@ -129,7 +129,7 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
 
   case SYSTEM_EVENT_AP_STADISCONNECTED: /**< a station disconnected from ESP32
                                            soft-AP */
-    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_STADISCONNECTED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_STADISCONNECTED\r");
     ESP_LOGI(TAG, "station:" MACSTR "leave, AID=%d",
              MAC2STR(event->event_info.sta_disconnected.mac),
              event->event_info.sta_disconnected.aid);
@@ -142,32 +142,32 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
     break;
 
   case SYSTEM_EVENT_AP_PROBEREQRECVED:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_PROBEREQRECVED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_AP_PROBEREQRECVED\r");
     break; /**< Receive probe request packet in soft-AP interface */
   case SYSTEM_EVENT_GOT_IP6:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_GOT_IP6\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_GOT_IP6\r");
     break; /**< ESP32 station or ap or ethernet interface v6IP addr is preferred
             */
   case SYSTEM_EVENT_ETH_START:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_START\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_START\r");
     break; /**< ESP32 ethernet start */
   case SYSTEM_EVENT_ETH_STOP:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_STOP\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_STOP\r");
     break; /**< ESP32 ethernet stop */
   case SYSTEM_EVENT_ETH_CONNECTED:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_CONNECTED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_CONNECTED\r");
     break; /**< ESP32 ethernet phy link up */
   case SYSTEM_EVENT_ETH_DISCONNECTED:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_DISCONNECTED\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_DISCONNECTED\r");
     break; /**< ESP32 ethernet phy link down */
   case SYSTEM_EVENT_ETH_GOT_IP:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_GOT_IP\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_ETH_GOT_IP\r");
     break; /**< ESP32 ethernet got IP from connected AP */
   case SYSTEM_EVENT_MAX:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_MAX\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_MAX\r");
     break;
   default:
-    ESP_LOGI(TAG, "SYSTEM_EVENT_OTHER\r\n");
+    ESP_LOGI(TAG, "SYSTEM_EVENT_OTHER\r");
     break;
   }
 
@@ -192,7 +192,7 @@ void start_dhcp_server(void) {
 
   // start the DHCP server
   ESP_ERROR_CHECK(tcpip_adapter_dhcps_start(TCPIP_ADAPTER_IF_AP));
-  ESP_LOGI(TAG, "DHCP server started \n");
+  ESP_LOGI(TAG, "DHCP server started ");
 }
 
 void start_mdns() {

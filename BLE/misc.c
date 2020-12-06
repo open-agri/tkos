@@ -112,7 +112,7 @@ print_adv_fields(const struct ble_hs_adv_fields *fields)
     int i;
 
     if (fields->flags != 0) {
-        ESP_LOGD(TAG, "    flags=0x%02x\n", fields->flags);
+        ESP_LOGD(TAG, "    flags=0x%02x", fields->flags);
     }
 
     if (fields->uuids16 != NULL) {
@@ -122,7 +122,7 @@ print_adv_fields(const struct ble_hs_adv_fields *fields)
             print_uuid(&fields->uuids16[i].u);
             ESP_LOGD(TAG, " ");
         }
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->uuids32 != NULL) {
@@ -132,7 +132,7 @@ print_adv_fields(const struct ble_hs_adv_fields *fields)
             print_uuid(&fields->uuids32[i].u);
             ESP_LOGD(TAG, " ");
         }
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->uuids128 != NULL) {
@@ -142,31 +142,31 @@ print_adv_fields(const struct ble_hs_adv_fields *fields)
             print_uuid(&fields->uuids128[i].u);
             ESP_LOGD(TAG, " ");
         }
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->name != NULL) {
         assert(fields->name_len < sizeof s - 1);
         memcpy(s, fields->name, fields->name_len);
         s[fields->name_len] = '\0';
-        ESP_LOGD(TAG, "    name(%scomplete)=%s\n",
+        ESP_LOGD(TAG, "    name(%scomplete)=%s",
                     fields->name_is_complete ? "" : "in", s);
     }
 
     if (fields->tx_pwr_lvl_is_present) {
-        ESP_LOGD(TAG, "    tx_pwr_lvl=%d\n", fields->tx_pwr_lvl);
+        ESP_LOGD(TAG, "    tx_pwr_lvl=%d", fields->tx_pwr_lvl);
     }
 
     if (fields->slave_itvl_range != NULL) {
         ESP_LOGD(TAG, "    slave_itvl_range=");
         print_bytes(fields->slave_itvl_range, BLE_HS_ADV_SLAVE_ITVL_RANGE_LEN);
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->svc_data_uuid16 != NULL) {
         ESP_LOGD(TAG, "    svc_data_uuid16=");
         print_bytes(fields->svc_data_uuid16, fields->svc_data_uuid16_len);
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->public_tgt_addr != NULL) {
@@ -176,38 +176,38 @@ print_adv_fields(const struct ble_hs_adv_fields *fields)
             ESP_LOGD(TAG, "public_tgt_addr=%s ", addr_str(u8p));
             u8p += BLE_HS_ADV_PUBLIC_TGT_ADDR_ENTRY_LEN;
         }
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->appearance_is_present) {
-        ESP_LOGD(TAG, "    appearance=0x%04x\n", fields->appearance);
+        ESP_LOGD(TAG, "    appearance=0x%04x", fields->appearance);
     }
 
     if (fields->adv_itvl_is_present) {
-        ESP_LOGD(TAG, "    adv_itvl=0x%04x\n", fields->adv_itvl);
+        ESP_LOGD(TAG, "    adv_itvl=0x%04x", fields->adv_itvl);
     }
 
     if (fields->svc_data_uuid32 != NULL) {
         ESP_LOGD(TAG, "    svc_data_uuid32=");
         print_bytes(fields->svc_data_uuid32, fields->svc_data_uuid32_len);
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->svc_data_uuid128 != NULL) {
         ESP_LOGD(TAG, "    svc_data_uuid128=");
         print_bytes(fields->svc_data_uuid128, fields->svc_data_uuid128_len);
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->uri != NULL) {
         ESP_LOGD(TAG, "    uri=");
         print_bytes(fields->uri, fields->uri_len);
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 
     if (fields->mfg_data != NULL) {
         ESP_LOGD(TAG, "    mfg_data=");
         print_bytes(fields->mfg_data, fields->mfg_data_len);
-        ESP_LOGD(TAG, "\n");
+        ESP_LOGD(TAG, "");
     }
 }

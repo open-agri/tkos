@@ -38,7 +38,7 @@ static int blecent_on_subscribe(uint16_t conn_handle,
                                 struct ble_gatt_attr *attr, void *arg) {
   ESP_LOGI(TAG,
            "Subscribe complete; status=%d conn_handle=%d "
-           "attr_handle=%d\n",
+           "attr_handle=%d",
            error->status, conn_handle, attr->handle);
 
   return 0;
@@ -225,14 +225,14 @@ blecent_connect_if_interesting(const struct ble_gap_disc_desc *disc) {
   /* Scanning must be stopped before a connection can be initiated. */
   rc = ble_gap_disc_cancel();
   if (rc != 0) {
-    ESP_LOGD(TAG, "Failed to cancel scan; rc=%d\n", rc);
+    ESP_LOGD(TAG, "Failed to cancel scan; rc=%d", rc);
     return;
   }
 
   /* Figure out address to use for connect (no privacy for now) */
   rc = ble_hs_id_infer_auto(0, &own_addr_type);
   if (rc != 0) {
-    ESP_LOGE(TAG, "error determining address type; rc=%d\n", rc);
+    ESP_LOGE(TAG, "error determining address type; rc=%d", rc);
     return;
   }
 
@@ -364,7 +364,7 @@ static int blecent_gap_event(struct ble_gap_event *event, void *arg) {
     return 0;
 
   case BLE_GAP_EVENT_MTU:
-    ESP_LOGI(TAG, "mtu update event; conn_handle=%d cid=%d mtu=%d\n",
+    ESP_LOGI(TAG, "mtu update event; conn_handle=%d cid=%d mtu=%d",
              event->mtu.conn_handle, event->mtu.channel_id, event->mtu.value);
     return 0;
 
@@ -392,7 +392,7 @@ static int blecent_gap_event(struct ble_gap_event *event, void *arg) {
 // static void
 // blecent_on_reset(int reason)
 // {
-//     ESP_LOGE(TAG, "Resetting state; reason=%d\n", reason);
+//     ESP_LOGE(TAG, "Resetting state; reason=%d", reason);
 // }
 
 // static void
