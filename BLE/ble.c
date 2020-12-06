@@ -12,6 +12,7 @@
 #include "esp_log.h"
 #include "esp_system.h"
 #include "nvs_flash.h"
+
 /* BLE */
 #include "esp_nimble_hci.h"
 #include "host/ble_hs.h"
@@ -21,6 +22,8 @@
 #include "services/gap/ble_svc_gap.h"
 
 #include "ble.h"
+#include "blepeer.h"
+#include "central.h"
 #include "gatt.h"
 #include "tk_uuid.h"
 
@@ -254,6 +257,9 @@ static void ble_on_sync(void) {
 
   // Advertise
   ble_advertise();
+
+  // Scan (central)
+  blecent_scan();
 }
 
 void ble_host_task(void *param) {
@@ -298,6 +304,10 @@ void tk_ble_init(void) {
       BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID;
   ble_hs_cfg.sm_their_key_dist =
       BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID;
+
+  // Peer storage
+  int rc = peer_init(MYNEWT_VAL(BLE_MAX_CONNECTIONS), 64, 64, 64);
+  assert(rc == 0);
 
   // GATT initialization (see up)
   if (tk_gatt_init()) {

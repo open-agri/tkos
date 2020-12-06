@@ -41,17 +41,6 @@
 void tkos_init(void) {
   ESP_LOGI(TAG, "Initializing TKOS.");
 
-  // NVS partition
-  esp_err_t ret = nvs_flash_init();
-  if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
-      ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-    ESP_LOGW(TAG, "NVS partition will be erased. Error: \"%s\".",
-             esp_err_to_name(ret));
-    ESP_ERROR_CHECK(nvs_flash_erase());
-    ret = nvs_flash_init();
-  }
-  ESP_ERROR_CHECK(ret);
-
   // Settings
   nv_init();
   nv_load_apply_settings();
@@ -110,6 +99,8 @@ void guiTask(void *pvParameter) {
 
   disp_drv.buffer = &disp_buf;
   lv_disp_drv_register(&disp_drv);
+
+  // Show boot screen
 
   // ISR install
   ESP_ERROR_CHECK(gpio_install_isr_service(0));

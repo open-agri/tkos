@@ -5,8 +5,9 @@
  * @version 0.1
  * @date 2020-09-26
  * 
- * 
  */
+
+#pragma once
 
 #if CONFIG_TK_ENGINESENSE
 #define BT_NAME_PREFIX  "TKES"

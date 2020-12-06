@@ -7,3 +7,7 @@
  * 
  * 
  */
+
+#pragma once
+
+void blecent_scan(void);

@@ -52,7 +52,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event)
     // Clock label
     if (obj == clock_label)
     {
-        ESP_LOGD(TAG, "Received a refresh event for the clock label.");
+        ESP_LOGV(TAG, "Received a refresh event for the clock label.");
         time_t time_raw;
         time(&time_raw);
         struct tm *timeinfo;
