@@ -23,8 +23,7 @@ typedef struct {
   ble_uuid_t *chr_id;
 } tk_ble_notification_identifier_t;
 
-// Setting handle to -1 means that it's not subscribed yet.
-#define NUM_INTERESTING_NOTIFICATIONS 2
+#define NUM_INTERESTING_NOTIFICATIONS 4
 extern tk_ble_notification_identifier_t
     interesting_notifications[NUM_INTERESTING_NOTIFICATIONS];
 

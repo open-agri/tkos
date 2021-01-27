@@ -72,11 +72,11 @@ static int blecent_subscribe(uint16_t conn_handle, void *arg) {
                              BLE_UUID16_DECLARE(BLE_GATT_DSC_CLT_CFG_UUID16));
 
     if (dsc == NULL) {
-      ESP_LOGE(TAG, "Error: Peer lacks a CCCD for the Unread Alert "
+      ESP_LOGW(TAG, "Error: Peer lacks a CCCD for the Unread Alert "
                     "Status characteristic. Details follow.");
       print_uuid(interesting_notifications[i].srv_id);
       print_uuid(interesting_notifications[i].chr_id);
-      goto err;
+      continue;
     }
 
     rc = ble_gattc_write_flat(conn_handle, dsc->dsc.handle, value, sizeof value,

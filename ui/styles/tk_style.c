@@ -148,7 +148,7 @@ void tk_styles_init(bool light)
     // ICON (NORMAL)
     lv_style_init(&tk_style_top_bar_icon);
     lv_style_set_text_font(&tk_style_top_bar_icon, LV_STATE_DEFAULT, &icons_16);
-    lv_style_set_text_color(&tk_style_top_bar_icon, LV_STATE_DEFAULT, light ? LV_COLOR_WHITE : LV_COLOR_BLACK);
+    lv_style_set_text_color(&tk_style_top_bar_icon, LV_STATE_DEFAULT, light ? LV_COLOR_BLACK : LV_COLOR_WHITE);
 
     // ICON (WARNING)
     lv_style_init(&tk_style_top_bar_icon_warn);
