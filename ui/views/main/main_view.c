@@ -54,7 +54,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event) {
   }
   // Left arc's value label
   else if (obj == arc_l_big_label) {
-      if (global_datastore.location_data.speed_available) {
+      if (global_datastore.location_data.speed_available && global_datastore.location_data.speed > 2.5) {
         char val[10];
         snprintf(val, 10, "%.1f", global_datastore.location_data.speed);
         lv_label_set_text(obj, val);
@@ -150,7 +150,7 @@ static void refresh_cb(lv_obj_t *obj, lv_event_t event) {
     lv_obj_add_style(arc_l, LV_CONT_PART_MAIN, &tk_style_no_background_borders);
     lv_arc_set_bg_angles(arc_l, 60, 300);
     lv_arc_set_angles(arc_l, 60, 300);
-    lv_arc_set_range(arc_l, 0, 800); // km/h * 10
+    lv_arc_set_range(arc_l, 0, 1000); // km/h * 10
     lv_arc_set_rotation(arc_l, 90);
     lv_arc_set_value(arc_l, 0);
     lv_arc_set_adjustable(arc_l, false);

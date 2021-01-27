@@ -60,7 +60,7 @@ static int blecent_subscribe(uint16_t conn_handle, void *arg) {
   value[1] = 0;
 
   int rc;
-  const struct peer *peer = peer_find(conn_handle);
+  struct peer *peer = peer_find(conn_handle);
 
   for (int i = 0; i < NUM_INTERESTING_NOTIFICATIONS; i++) {
     ESP_LOGI(TAG, "Subscribing to interesting characteristic #%d.", i);
@@ -87,20 +87,30 @@ static int blecent_subscribe(uint16_t conn_handle, void *arg) {
                "Error: Failed to subscribe to characteristic; "
                "rc=%d.",
                rc);
-      goto err;
+      continue;
     }
+  }
 
-    struct peer_chr *chr = peer_chr_find_uuid(peer, interesting_notifications[i].srv_id,
-                                              interesting_notifications[i].chr_id);
+  // Save handles
+  for (int i = 0; i < NUM_INTERESTING_NOTIFICATIONS; i++) {
+    struct peer_chr *chr =
+        peer_chr_find_uuid(peer, interesting_notifications[i].srv_id,
+                           interesting_notifications[i].chr_id);
 
-    interesting_notifications[i].val_handle = chr->chr.val_handle;
-    ESP_LOGI(TAG, "Setting entry #%d val_handle to %d.", i, chr->chr.val_handle);
+    if (chr != NULL) {
+      interesting_notifications[i].val_handle = chr->chr.val_handle;
+      ESP_LOGI(TAG,
+               "Setting interesting_notifications entry #%d val_handle to %d.",
+               i, chr->chr.val_handle);
+    } else {
+      ESP_LOGE(TAG,
+               "Unable to set interesting_notifications entry #%d val_handle. "
+               "chr is NULL.",
+               i);
+    }
   }
 
   return 0;
-err:
-  /* Terminate the connection. */
-  return ble_gap_terminate(peer->conn_handle, BLE_ERR_REM_USER_CONN_TERM);
 }
 
 /**
