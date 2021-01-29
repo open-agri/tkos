@@ -36,18 +36,18 @@ static void right_button_update(tk_menu_item_t *focused);
 // Menu
 static tk_menu_item_t auto_brightness_switch = {
     .type = TK_MENU_ITEM_SWITCH,
-    .desc = "Automatic brightness",
-    .button_string = "Toggle   " LV_SYMBOL_EDIT,
-    .editing_button_string = "Toggle   " LV_SYMBOL_EDIT,
+    .desc = "Luminosità automatica",
+    .button_string = "Modifica   " LV_SYMBOL_EDIT,
+    .editing_button_string = "Modifica   " LV_SYMBOL_EDIT,
     .binding_type = TK_MENU_BINDING_INT,
     .binding = &(global_datastore.brightness_settings.automatic),
     .value_change_cb = auto_brightness_cb};
 
 static tk_menu_item_t brightness_slider = {
     .type = TK_MENU_ITEM_SLIDER,
-    .desc = "Brightness",
-    .button_string = "Edit   " LV_SYMBOL_EDIT,
-    .editing_button_string = "Done   " LV_SYMBOL_OK,
+    .desc = "Luminosità",
+    .button_string = "Modifica   " LV_SYMBOL_EDIT,
+    .editing_button_string = "Fine   " LV_SYMBOL_OK,
     .binding_type = TK_MENU_BINDING_DOUBLE,
     .binding_min = 0,
     .binding_max = 1,
@@ -122,8 +122,8 @@ tk_view_t build_brightness_view() {
   ESP_LOGI(TAG, "Building view.");
 
   // Strings
-  strcpy(lb_string, LV_SYMBOL_LEFT "   Back");
-  strcpy(rb_string, "Edit   " LV_SYMBOL_EDIT);
+  strcpy(lb_string, LV_SYMBOL_LEFT "   Indietro");
+  strcpy(rb_string, "Modifica   " LV_SYMBOL_EDIT);
 
   // Content
   lv_obj_t *view_content = lv_cont_create(NULL, NULL);
@@ -158,7 +158,7 @@ tk_view_t build_brightness_view() {
   bb_conf.right_button = right_bar_button;
   bb_conf.left_button = left_bar_button;
 
-  tb_conf.title = "Brightness";
+  tb_conf.title = "Luminosità";
 
   // Return struct
   tk_view_t main_view = {.content = view_content,

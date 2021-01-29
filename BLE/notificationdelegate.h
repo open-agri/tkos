@@ -23,7 +23,7 @@ typedef struct {
   ble_uuid_t *chr_id;
 } tk_ble_notification_identifier_t;
 
-#define NUM_INTERESTING_NOTIFICATIONS 5
+#define NUM_INTERESTING_NOTIFICATIONS 6
 extern tk_ble_notification_identifier_t
     interesting_notifications[NUM_INTERESTING_NOTIFICATIONS];
 

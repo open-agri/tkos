@@ -29,7 +29,7 @@ typedef struct {
      * @brief The engine's external temperature in Celsius degrees.
      * 
      */
-    double temp_c;
+    float temp_c;
     bool temp_c_available;
 
 } tk_engine_data_t;

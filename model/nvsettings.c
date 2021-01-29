@@ -19,6 +19,8 @@
 
 nvs_handle_t nv_handle;
 
+void nv_get_units();
+
 // -------------------- GENERAL FUNCTIONS --------------------
 void nv_init() {
 
@@ -53,9 +55,20 @@ void nv_load_apply_settings() {
 
   // Brightness
   // Nothing to apply
+
+  // Units
+  nv_get_units();
 }
 
 // -------------------- SETTINGS --------------------
+
+// Units
+void nv_get_units() {
+  global_datastore.unit_settings.celsius = true;
+  global_datastore.unit_settings.clock_24h = true;
+
+  // TODO
+}
 
 // Automatic brightness
 void nv_set_brightness_auto(bool automatic) {

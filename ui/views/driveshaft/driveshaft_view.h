@@ -1,9 +1,9 @@
 /**
- * @file menu_view.h
+ * @file driveshaft_view.h
  * @author Riccardo Persello (riccardo.persello@icloud.com)
- * @brief The menu view generator.
+ * @brief Driveshaft view.
  * @version 0.1
- * @date 2020-09-10
+ * @date 2021-01-28
  * 
  * 
  */
@@ -13,9 +13,9 @@
 #include "ui/tk_view.h"
 
 /**
- * @brief The menu view generator.
+ * @brief The driveshaft view generator.
  * 
  * @return tk_view_t The generated view.
  */
-tk_view_t build_menu_view();
+tk_view_t build_driveshaft_view();
 

@@ -11,6 +11,7 @@
 #include "BLE/notificationdelegate.h"
 #include "model/datastore.h"
 
+#include <math.h>
 #include <sys/time.h>
 #include <time.h>
 
@@ -24,7 +25,8 @@ tk_ble_notification_identifier_t
          &(tk_id_engine_temperature_ch_engine.u)},
         {-1, &(tk_id_location.u), &(tk_id_location_ch_gps_avail.u)},
         {-1, &(tk_id_location.u), &(tk_id_location_ch_timestamp.u)},
-        {-1, &(tk_id_location.u), &(tk_id_location_ch_speed_kph.u)}};
+        {-1, &(tk_id_location.u), &(tk_id_location_ch_speed_kph.u)},
+        {-1, &(tk_id_engine_temperature.u), &(tk_id_engine_temperature_ch_engine.u)}};
 
 void tk_ble_rpm_recv(struct os_mbuf *om);
 // void tk_ble_rpm_avail_recv(struct os_mbuf *om);
@@ -77,7 +79,19 @@ void tk_ble_handle_gatt_notification(uint16_t conn_handle, uint16_t attr_handle,
     tk_ble_gps_speed_kph_recv(om);
   } else if (ble_uuid_cmp(chr_id, &(tk_id_location_ch_gps_avail.u)) == 0) {
     tk_ble_gps_avail_recv(om, conn_handle);
+  } else if (ble_uuid_cmp(chr_id, &(tk_id_engine_temperature_ch_engine.u)) == 0) {
+    tk_ble_temperature_recv(om);
   }
+}
+
+void tk_ble_temperature_recv(struct os_mbuf *om) {
+  float temp;
+  tk_om_decode(om, sizeof temp, sizeof temp, &temp, NULL);
+
+  global_datastore.engine_data.temp_c = temp;
+  global_datastore.engine_data.temp_c_available = (temp != 0.0/0.0);
+
+  ESP_LOGD(TAG, "Temerature received: %.2f.", temp);
 }
 
 void tk_ble_rpm_recv(struct os_mbuf *om) {
